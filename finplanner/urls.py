@@ -22,6 +22,10 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^$', views.home, name='home'),
+
     url(r'^month/add/$', views.add_month, name="add_month"),
+    url(r'^month/(?P<mid>[0-9]+)/$', views.show_month, name="show_month"),
+    url(r'^month/(?P<mid>[0-9]+)/score/add/$', views.add_score, name="add_score"),
+
     url(r'^account/add/$', views.add_account, name="add_account"),
 ]

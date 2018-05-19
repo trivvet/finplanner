@@ -1,0 +1,21 @@
+{% extends "finance/base.html" %}
+
+{% block header %}
+<div class="row">
+    <div class="col-12 text-center">
+        <h1>Бюджет за {{ month.name }}</h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<h2>Баланс</h2>
+{% for score in scores %}
+<p>{{ score.month.name }} - {{ score.amount }}</p>
+{% endfor %}
+<form action="/month/{{ month.id }}/score/add/" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" class="btn btn-success btn-sm" value="Додати">
+</form>
+{% endblock %}

@@ -37,6 +37,33 @@ def add_month(request):
 class AddMonth(forms.Form):
     name = forms.CharField(label="", max_length=50)
 
+def show_month(request, mid):
+    month = Month.objects.get(pk=mid)
+    scores = Score.objects.all()
+    form = AddScore()
+    return render(request, 'finance/month.html', {'month': month, 'scores': scores, 'form': form})
+
+def add_score(request, mid):
+    if request.method == "POST":
+        form = AddScore(request.POST)
+        if form.is_valid():
+            data = {}
+            data['account'] = Account.objects.get(pk=form.cleaned_data['account'])
+            data['month'] = Month.objects.get(pk=mid)
+            data['amount'] = form.cleaned_data['amount']
+            score = Score(**data)
+            score.save()
+    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
+
+class AddScore(forms.Form):
+    accounts = Account.objects.all()
+    account_choices = []
+    for account in accounts:
+        choice = (account.id, account.name)
+        account_choices.append(choice)
+    account = forms.ChoiceField(label=u"Рахунок", choices=account_choices)
+    amount = forms.IntegerField(label=u"Залишок")
+
 def add_account(request):
     if request.method == "POST":
         form = AddAccount(request.POST)

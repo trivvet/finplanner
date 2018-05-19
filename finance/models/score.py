@@ -33,4 +33,4 @@ class Score(models.Model):
     )
 
     def __unicode__(self):
-        return u"Залишок за %s по %s" % (self.month, self.account)
+        return u"Залишок за %s по %s" % (self.month.name, self.account)

@@ -32,7 +32,7 @@
     <div class="col-4">
         {% if content.months %}
             {% for month in content.months %}
-                <p>{{ month }}</p>
+                <p>{{ month }} <a class="btn btn-info btn-sm" href="/month/{{ month.id }}/">Деталі</a></p>
             {% endfor %}
         {% else %}
             <p>Ще немає місяців у базі</p>
