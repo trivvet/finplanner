@@ -22,4 +22,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^$', views.home, name='home'),
+    url(r'^month/add/$', views.add_month, name="add_month"),
+    url(r'^account/add/$', views.add_account, name="add_account"),
 ]
