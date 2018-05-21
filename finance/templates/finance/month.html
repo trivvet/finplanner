@@ -10,12 +10,39 @@
 
 {% block content %}
 <h2>Баланс</h2>
+{% if scores %}
 {% for score in scores %}
-<p>{{ score.month.name }} - {{ score.amount }}</p>
+<p>{{ score.account.name }} - {{ score.amount }}
+    <a class="btn btn-outline-danger btn-sm" 
+        href="{% url 'delete_score' month.id score.id %}">Видалити</a></p>
 {% endfor %}
-<form action="/month/{{ month.id }}/score/add/" method="POST">
+<p><em>Всього на рахунках - {{ month.balance }}</em></p>
+{% else %}
+Баланс порожній
+{% endif %}
+
+<form action="{% url 'add_score' month.id %}" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" class="btn btn-success btn-sm" value="Додати">
 </form>
+
+<h2>Заплановані витрати</h2>
+{% if planned_expenses %}
+    {% for planned_expense in planned_expenses %}
+        <p>{{ planned_expense.title }} - {{ planned_expense.amount }}
+            <a class="btn btn-outline-danger btn-sm" 
+               href="{% url 'delete_planned_expense' month.id planned_expense.id %}">Видалити</a></p>
+    {% endfor %}
+    <p><em>Всього заплановано витрат - {{ month.expenses_plan }}</em></p>
+{% else %}
+    Витрати ще не заплановані
+{% endif %}
+<form action="{% url 'add_planned_expense' month.id %}" method="POST">
+    {% csrf_token %}
+    {{ form_planned_expense.as_p }}
+    <input type="submit" class="btn btn-success btn-sm" value="Додати">
+</form>
+<p></p>
+<p><a class="btn btn-link" href="/">Повернутись на головну сторінку</a></p>
 {% endblock %}

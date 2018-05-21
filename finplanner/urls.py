@@ -22,10 +22,23 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^$', views.home, name='home'),
-
-    url(r'^month/add/$', views.add_month, name="add_month"),
+    
+    # Month URLS
     url(r'^month/(?P<mid>[0-9]+)/$', views.show_month, name="show_month"),
-    url(r'^month/(?P<mid>[0-9]+)/score/add/$', views.add_score, name="add_score"),
+    url(r'^month/add/$', views.add_month, name="add_month"),
+    url(r'^month/(?P<mid>[0-9]+)/delete/$', views.delete_month, name="delete_month"),
 
+    # Accoun URLS
     url(r'^account/add/$', views.add_account, name="add_account"),
+
+    # Score URLS
+    url(r'^month/(?P<mid>[0-9]+)/score/add/$', views.add_score, name="add_score"),
+    url(r'^month/(?P<mid>[0-9]+)/score/(?P<sid>[0-9]+)/delete/$', views.delete_score, 
+        name="delete_score"),
+
+    # Expense URLS
+    url(r'^month/(?P<mid>[0-9]+)/expense/add/$', views.add_planned_expense, 
+        name="add_planned_expense"),
+    url(r'^month/(?P<mid>[0-9]+)/expense/(?P<pid>[0-9]+)/delete/$', views.delete_planned_expense, 
+        name="delete_planned_expense"),
 ]

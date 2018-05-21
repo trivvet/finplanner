@@ -17,5 +17,26 @@ class Month(models.Model):
         verbose_name="Month Name"
     )
 
+    balance = models.IntegerField(
+        blank=False,
+        null=False,
+        default=0,
+        verbose_name="Money Amount"
+    )
+
+    expenses_plan = models.IntegerField(
+        blank=False,
+        null=False,
+        default=0,
+        verbose_name="Amount of Planned Expenses"
+    )
+
+    expenses_done = models.IntegerField(
+        blank=False,
+        null=False,
+        default=0,
+        verbose_name="Amount of Done Expenses"
+    )
+
     def __unicode__(self):
         return u"Бюджет за %s" % (self.name)

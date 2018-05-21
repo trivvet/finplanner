@@ -32,7 +32,7 @@
     <div class="col-4">
         {% if content.months %}
             {% for month in content.months %}
-                <p>{{ month }} <a class="btn btn-info btn-sm" href="/month/{{ month.id }}/">Деталі</a></p>
+                <p>{{ month }} <a class="btn btn-info btn-sm" href="/month/{{ month.id }}/">Деталі</a> <a class="btn btn-danger btn-sm" href="/month/{{ month.id }}/delete">Видалити</a></p>
             {% endfor %}
         {% else %}
             <p>Ще немає місяців у базі</p>
@@ -45,6 +45,16 @@
             {% endfor %}
         {% else %}
             <p>Ще немає рахунків у базі</p>
+        {% endif %}
+    </div>
+    <div class="col-4">
+        <h2>Залишки</h2>
+        {% if content.scores %}
+            {% for score in content.scores %}
+                <p>{{ score }}</p>
+            {% endfor %}
+        {% else %}
+            <p>Ще немає залишків</p>
         {% endif %}
     </div>
 </div>
