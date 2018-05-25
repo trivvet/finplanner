@@ -1,0 +1,32 @@
+#balance {
+    background-color: #dbfcbe;
+    padding: 1em;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+#expenses {
+    background-color: #e6c5c8;
+    padding: 1em;
+    margin-top: 2em;
+}
+
+#transactions {
+    background-color: #d7e8fc;
+    padding: 1em;
+    margin-top: 2em;
+}
+
+/*#example {
+    background-color: red;
+    margin-top: 3em;
+    height: 5em;
+}
+
+#exampleCollapse {
+    background: green;
+    height: 5em;
+    margin-top: 3em;
+}*/
