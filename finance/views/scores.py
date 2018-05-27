@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django import forms
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
@@ -27,6 +28,7 @@ def add_score(request, mid):
             score.save()
             month.balance += data['amount']
             month.save()
+            messages.success(request, u"Надходження на %s успішно додане!" % score.account.name)
     return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
 
 def delete_score(request, mid, sid):
@@ -35,6 +37,7 @@ def delete_score(request, mid, sid):
     month = Month.objects.get(pk=mid)
     month.balance -= score.amount
     month.save()
+    messages.success(request, u"Надходження на %s успішно видалене!" % score.account.name)
     return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
 
 class AddScore(forms.Form):

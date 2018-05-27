@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django import forms
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -9,6 +10,7 @@ from django.urls import reverse
 
 from finance.models import Account, Month, Score, PlannedExpense
 from .scores import AddScore
+from .expenses import AddExpense
 
 # Create your views here.
 
@@ -44,6 +46,7 @@ def add_month(request):
             name = form.cleaned_data['name']
             month = Month(name=name)
             month.save()
+            messages.success(request, u"Бюджет на %s успішно доданий!" % month.name)
     return HttpResponseRedirect(reverse("home"))
 
 class AddMonth(forms.Form):
@@ -52,32 +55,8 @@ class AddMonth(forms.Form):
 def delete_month(request, mid):
     month = Month.objects.get(pk=mid)
     month.delete()
+    messages.success(request, u"Бюджет на %s успішно видалений!" % month.name)
     return HttpResponseRedirect(reverse("home"))
-
-def add_planned_expense(request, mid):
-    if request.method == "POST":
-        form = AddExpense(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            month = Month.objects.get(pk=mid)
-            data['month'] = month
-            expense = PlannedExpense(**data)
-            expense.save()
-            month.expenses_plan += data['amount']
-            month.save()
-    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
-
-def delete_planned_expense(request, mid, pid):
-    planned_expense = PlannedExpense.objects.get(pk=pid)
-    planned_expense.delete()
-    month = Month.objects.get(pk=mid)
-    month.expenses_plan -= planned_expense.amount
-    month.save()
-    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
-
-class AddExpense(forms.Form):
-    title = forms.CharField(label=u"Назва запланованої витрати", max_length=256)
-    amount = forms.IntegerField(label=u"Розмір витрати")
 
 def add_account(request):
     if request.method == "POST":
@@ -86,8 +65,9 @@ def add_account(request):
             data = {}
             data['name'] = form.cleaned_data['name']
             data['kind'] = form.cleaned_data['kind']
-            month = Account(**data)
-            month.save()
+            account = Account(**data)
+            account.save()
+            messages.success(request, u"Рахунок %s успішно доданий" % account.name)
     return HttpResponseRedirect(reverse("home"))
 
 class AddAccount(forms.Form):
