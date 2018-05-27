@@ -38,5 +38,14 @@ class Month(models.Model):
         verbose_name="Amount of Done Expenses"
     )
 
+    approved = models.NullBooleanField(
+        blank=True,
+        null=True,
+        verbose_name="State of Affirmation")
+
     def __unicode__(self):
-        return u"Бюджет за %s" % (self.name)
+        if (self.approved):
+            month = u"%s (Затверджений)" % self.name
+        else:
+            month = self.name
+        return u"Бюджет за %s" % (month)

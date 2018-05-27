@@ -35,6 +35,10 @@ def show_month(request, mid):
     expenses = PlannedExpense.objects.filter(month=month)
     form = AddScore()
     form_planned_expense = AddExpense()
+    if request.method == "POST":
+        month.approved = True
+        month.save()
+        messages.success(request, u"Бюджет на %s затверджено!" % month.name)
     return render(request, 'finance/month.html', 
         {'month': month, 'scores': scores, 'form': form, 
          'form_planned_expense': form_planned_expense, 'planned_expenses': expenses})

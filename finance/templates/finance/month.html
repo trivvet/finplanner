@@ -3,7 +3,7 @@
 {% block header %}
 <div class="row">
     <div class="col-12 text-center mt-3" id="page-header">
-        <h1>Бюджет за {{ month.name }}</h1>
+        <h1>Бюджет за {{ month.name }} {% if month.approved %}<span id="approved">(Затверджений)</span>{% endif %}</h1>
     </div>
 </div>
 {% endblock %}
@@ -21,15 +21,20 @@
                         <td>{{ score.account.name }}</td>
                         <td>{{ score.amount }}</td>
                         <td>
+                            {% if month.approved is not True %}
                             <a class="btn btn-outline-danger btn-sm" 
                             href="{% url 'delete_score' month.id score.id %}">Видалити</a>
+                            {% endif %}
                         </td>
                     {% endfor %}
                     <tr>
                         <th>Всього на рахунках</th>
                         <th>{{ month.balance }}</th>
-                        <td><a class="btn btn-outline-success btn-sm" data-toggle="collapse"
+                        <td>
+                            {% if month.approved is not True %}
+                            <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
                             href="#collapseAddScore" role="button" aria-expanded="false" aria-controls="collapseAddScore">Додати</a>
+                            {% endif %}
                         </td>
                     </tr>
                 </tbody>
@@ -63,8 +68,10 @@
                                 <td>{{ planned_expense.title }}</td>
                                 <td>{{ planned_expense.amount }}</td>
                                 <td>
+                                    {% if month.approved is not True %}
                                     <a class="btn btn-outline-danger btn-sm" 
                                        href="{% url 'delete_planned_expense' month.id planned_expense.id %}">Видалити</a>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -72,8 +79,10 @@
                             <th>Всього заплановано витрат</th>
                             <th>{{ month.expenses_plan }}</th>
                             <td>
+                                {% if month.approved is not True %}
                                 <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
                                     href="#collapseAddExpense" role="button" aria-expanded="false"aria-controls="collapseAddExpense">Додати</a>
+                                {% endif %}
                             </td>
                         </tr>
                     </tdody>
@@ -104,6 +113,7 @@
     </div>
 </div>
 
+{% if month.approved %}
 <div class="row">
     <div class="col-12">
         <div id="transactions">
@@ -112,6 +122,14 @@
         </div>
     </div>
 </div>
+{% else %}
+<form action="" method="POST" class="float-right mt-3">
+{% csrf_token %}
+<button type="submit" class="btn btn-primary btn-lg">Затвердити</button>
+</form>
+{% endif %}
+
+
 <!-- <div class="row">
     <div class="col" id="example">
         <a class="btn btn-outline-info btn-sm" data-toggle="collapse" 
