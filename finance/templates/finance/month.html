@@ -118,7 +118,20 @@
     <div class="col-12">
         <div id="transactions">
             <h3>Транзакції</h3>
-            <p>В даному місяці ще немає транзакцій</p>
+            {% if transactions %}
+                
+            {% else %}
+                <p>В даному місяці ще немає транзакцій</p>
+                <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
+                    href="#collapseAddTransaction" role="button" aria-expanded="false" aria-controls="collapseAddTransaction">Додати</a>
+                <div class="collapse" id="collapseAddTransaction">
+                    <form action="{% url 'add_transaction' month.id %}" method="POST" 
+                        class="form-inline">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-success btn-sm ml-2" value="Додати">
+                    </form>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

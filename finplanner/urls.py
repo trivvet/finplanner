@@ -41,4 +41,8 @@ urlpatterns = [
         name="add_planned_expense"),
     url(r'^month/(?P<mid>[0-9]+)/expense/(?P<pid>[0-9]+)/delete/$', views.delete_planned_expense, 
         name="delete_planned_expense"),
+
+    #Transaction URLS
+    url(r'^month(?P<mid>[0-9]+)/transaction/add/$', views.add_transaction,
+        name="add_transaction"),
 ]

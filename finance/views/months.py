@@ -11,6 +11,7 @@ from django.urls import reverse
 from finance.models import Account, Month, Score, PlannedExpense
 from .scores import AddScore
 from .expenses import AddExpense
+from .transactions import AddTransaction
 
 # Create your views here.
 
@@ -35,13 +36,15 @@ def show_month(request, mid):
     expenses = PlannedExpense.objects.filter(month=month)
     form = AddScore()
     form_planned_expense = AddExpense()
+    form_transaction = AddTransaction(mid)
     if request.method == "POST":
         month.approved = True
         month.save()
         messages.success(request, u"Бюджет на %s затверджено!" % month.name)
     return render(request, 'finance/month.html', 
         {'month': month, 'scores': scores, 'form': form, 
-         'form_planned_expense': form_planned_expense, 'planned_expenses': expenses})
+         'form_planned_expense': form_planned_expense, 'planned_expenses': expenses,
+         'form_transaction': form_transaction})
 
 def add_month(request):
     if request.method == "POST":
