@@ -1,49 +1,52 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+# import sys  
+
+# reload(sys)  
+# sys.setdefaultencoding('utf8')
+
 from django import forms
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from finance.models import Account, Month, PlannedExpense
+from finance.models import Account, Month, PlannedExpense, Transaction, Score
 
 def add_transaction(request, mid):
-    # if request.method == "POST":
-    #     form = AddTransaction(request.POST)
-    #     if form.is_valid():
-    #         data = form.cleaned_data
-    #         month = Month.objects.get(pk=mid)
-    #         data['month'] = month
-    #         expense = PlannedExpense(**data)
-    #         expense.save()
-    #         month.expenses_plan += data['amount']
-    #         month.save()
-    #         messages.success(request, u"Запланована витрата на %s успішно додана!" % expense.title)
+    if request.method == "POST":
+        post_data = request.POST
+        form = AddTransaction(post_data)
+        month = Month.objects.get(pk=mid)
+        if form.is_valid():
+            data = form.cleaned_data
+            score_source = Score.objects.get(pk=post_data.get('score_source', ''))
+            data['score_source'] = score_source
+            data['month'] = month
+            if post_data.get('score_goal', ''):
+                score_goal = Score.objects.get(pk=post_data.get('score_goal', ''))
+                data['score_goal'] = str(score_goal.id)
+                transaction = Transaction(**data)
+                transaction.save()
+                score_source.amount -= data['amount']
+                score_source.save()
+                score_goal.amount += data['amount']
+                score_goal.save()
+                messages.success(request, u"Переказ успішно доданий!")
+            elif post_data.get('planned_expense', ''):
+                planned_expense = PlannedExpense.objects.get(pk=post_data.get('planned_expense', ''))
+                data['planned_expense'] = planned_expense
+                transaction = Transaction(**data)
+                transaction.save()
+                messages.success(request, u"Витрата успішно додана!")
     return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
 
-# def delete_planned_expense(request, mid, pid):
-#     planned_expense = PlannedExpense.objects.get(pk=pid)
-#     planned_expense.delete()
-#     month = Month.objects.get(pk=mid)
-#     month.expenses_plan -= planned_expense.amount
-#     month.save()
-#     messages.success(request, u"Запланована витрата на %s успішно видалена!" % planned_expense.title)
-#     return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
+def delete_transaction(request, mid, tid):
+    transaction = Transaction.objects.get(pk=tid)
+    transaction.delete()
+    messages.success(request, u"Транзакція успішно видалена!")
+    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
 
-class AddTransaction(forms.Form, mid):
-    accounts = Account.objects.all()
-    account_choices = []
-    for account in accounts:
-        choice = (account.id, account.name)
-        account_choices.append(choice)
-    month = Month.objects.get(pk=mid)
-    expenses = PlannedExpense.objects.filter(month=month)
-    expense_choices = []
-    for expense in expenses:
-        choice = (expense.id, expense.title)
-        expense_choices.append(choice)
-    source = forms.ChoiceField(label=u"Рахунок", choices=account_choices)
-    goal = forms.ChoiceField(label=u"Рахунок", choices=account_choices)
-    expense = forms.ChoiceField(label=u"Витрата", choices=expense_choices)
+class AddTransaction(forms.Form):
     amount = forms.IntegerField(label=u"Розмір транзакції")
+    detail = forms.CharField(label=u"Деталі", required=False)

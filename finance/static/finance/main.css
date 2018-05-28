@@ -23,6 +23,10 @@
     margin-top: 2em;
 }
 
+#transactions_form {
+    margin-top: 1em;
+}
+
 #approved {
     color: green;
 }

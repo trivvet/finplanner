@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 # from django.http import HttpResponse
 
-from finance.models import Account, Month, Score, PlannedExpense
+from finance.models import Account, Month, Score, PlannedExpense, Transaction
 from .scores import AddScore
 from .expenses import AddExpense
 from .transactions import AddTransaction
@@ -34,9 +34,10 @@ def show_month(request, mid):
     month = Month.objects.get(pk=mid)
     scores = Score.objects.filter(month=month)
     expenses = PlannedExpense.objects.filter(month=month)
+    transactions = Transaction.objects.filter(month=month)
     form = AddScore()
     form_planned_expense = AddExpense()
-    form_transaction = AddTransaction(mid)
+    form_transaction = AddTransaction()
     if request.method == "POST":
         month.approved = True
         month.save()
@@ -44,7 +45,7 @@ def show_month(request, mid):
     return render(request, 'finance/month.html', 
         {'month': month, 'scores': scores, 'form': form, 
          'form_planned_expense': form_planned_expense, 'planned_expenses': expenses,
-         'form_transaction': form_transaction})
+         'form_transaction': form_transaction, 'transactions': transactions})
 
 def add_month(request):
     if request.method == "POST":

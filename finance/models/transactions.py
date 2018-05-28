@@ -17,16 +17,15 @@ class Transaction(models.Model):
     )
 
     score_source = models.ForeignKey(
-        'Account',
+        'Score',
         on_delete=models.CASCADE,
         blank=False,
         null=False,
         verbose_name="Transaction Source"
     )
 
-    score_goal = models.ForeignKey(
-        'Account',
-        on_delete=models.CASCADE,
+    score_goal = models.CharField(
+        max_length=256,
         blank=True,
         null=True,
         verbose_name="Transaction Goal"
@@ -46,6 +45,12 @@ class Transaction(models.Model):
         verbose_name="Transaction Amount"
     )
 
+    date = models.DateTimeField(
+        auto_now_add=True,
+        blank=True,
+        null=True,
+        verbose_name="Transaction Time")
+
     detail = models.CharField(
         max_length=256,
         blank=True,
@@ -55,6 +60,6 @@ class Transaction(models.Model):
 
     def __unicode__(self):
         if self.planned_expense:
-            return u"Витрати на %s за %s" % (self.planned_expense, self.month.name)
+            return u"Витрати на %s" % (self.planned_expense.title)
         elif self.score_goal:
             return u"Переказ з рахунку %s на рахунок %s за %s" % (self.score_source, self.score_goal, self.month.name)
