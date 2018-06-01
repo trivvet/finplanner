@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from datetime import datetime
 
 class Transaction(models.Model):
     class Meta:
@@ -46,7 +47,7 @@ class Transaction(models.Model):
     )
 
     date = models.DateTimeField(
-        auto_now_add=True,
+        default=datetime.now,
         blank=True,
         null=True,
         verbose_name="Transaction Time")

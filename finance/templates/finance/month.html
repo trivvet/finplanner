@@ -19,7 +19,7 @@
                     {% for score in scores %}
                     <tr>
                         <td>{{ score.account.name }}</td>
-                        <td>{{ score.amount }}</td>
+                        <td>{{ score.remainder }}</td>
                         <td>
                             {% if month.approved is not True %}
                             <a class="btn btn-outline-danger btn-sm" 
@@ -61,32 +61,38 @@
         <div id="expenses">
             <h3>Витрати</h3>
             {% if planned_expenses %}
-                <table class="table">
-                    <tdody>
-                        {% for planned_expense in planned_expenses %}
-                            <tr>
-                                <td>{{ planned_expense.title }}</td>
-                                <td>{{ planned_expense.amount }}</td>
-                                <td>
-                                    {% if month.approved is not True %}
-                                    <a class="btn btn-outline-danger btn-sm" 
-                                       href="{% url 'delete_planned_expense' month.id planned_expense.id %}">Видалити</a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        <tr>
-                            <th>Всього заплановано витрат</th>
-                            <th>{{ month.expenses_plan }}</th>
-                            <td>
-                                {% if month.approved is not True %}
-                                <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
-                                    href="#collapseAddExpense" role="button" aria-expanded="false"aria-controls="collapseAddExpense">Додати</a>
+                <div class="list-group">
+                {% for planned_expense in planned_expenses %}
+                    <div class="list-group-item">
+                    {{ planned_expense.title }} - 
+                    {{ planned_expense.amount }}
+                    {% if month.approved is not True %}
+                    <a class="btn btn-outline-danger btn-sm" 
+                       href="{% url 'delete_planned_expense' month.id planned_expense.id %}">Видалити</a>
+                    {% endif %}
+                    {% if planned_expense.expenses %}
+                    (Залишок - {{ planned_expense.remainder }})
+                        <ul class="list-group">
+                        {% for expense in planned_expense.expenses %}
+                            <li class="list-group-item">
+                                {{ expense.date|date:"d.m" }} - {{ expense.amount }}грн 
+                                {% if expense.detail %}
+                                ({{ expense.detail }})
                                 {% endif %}
-                            </td>
-                        </tr>
-                    </tdody>
-                </table>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    </div>
+                {% endfor %}
+                    <div class="list-group-item">
+                        <strong>Всього заплановано витрат - {{ month.expenses_plan }}</strong>
+                        {% if month.approved is not True %}
+                        <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
+                            href="#collapseAddExpense" role="button" aria-expanded="false"aria-controls="collapseAddExpense">Додати</a>
+                        {% endif %}
+                    </div>
+                </div>
             {% else %}
                 Витрати ще не заплановані
                 <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
@@ -188,14 +194,14 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row mb-5">
     <div class="col-12">
         <div id="transactions">
             <h3>Транзакції</h3>
             {% if transactions %}
                 {% for transaction in transactions %}
                     <p>
-                        {{ transaction.date }} {{ transaction }} - {{ transaction.amount }}
+                        {{ transaction.date|date:"d.m.y" }} {{ transaction }} - {{ transaction.amount }}
                         <a class="btn btn-outline-danger btn-sm" href="{% url 'delete_transaction' month.id transaction.id %}">Видалити</a>
                     </p>
 

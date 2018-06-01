@@ -31,6 +31,10 @@
     color: green;
 }
 
+.list-group-item {
+    background-color: inherit;
+}
+
 /*#example {
     background-color: red;
     margin-top: 3em;

@@ -24,6 +24,7 @@ def add_score(request, mid):
             data['account'] = Account.objects.get(pk=form.cleaned_data['account'])
             data['month'] = month
             data['amount'] = form.cleaned_data['amount']
+            data['remainder'] = form.cleaned_data['amount']
             score = Score(**data)
             score.save()
             month.balance += data['amount']

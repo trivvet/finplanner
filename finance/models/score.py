@@ -24,6 +24,11 @@ class ScorePrototype(models.Model):
         verbose_name="Money Amount"
     )
 
+    remainder = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name="Money Remainder"
+    )
 
 class Score(ScorePrototype):
 

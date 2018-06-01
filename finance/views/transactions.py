@@ -38,15 +38,36 @@ def add_transaction(request, mid):
                 data['planned_expense'] = planned_expense
                 transaction = Transaction(**data)
                 transaction.save()
+                change_accounts(transaction, planned_expense, month, 
+                    score_source, True)
                 messages.success(request, u"Витрата успішно додана!")
     return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
 
 def delete_transaction(request, mid, tid):
     transaction = Transaction.objects.get(pk=tid)
     transaction.delete()
+    planned_expense = PlannedExpense.objects.get(pk=transaction.planned_expense.id)
+    score = Score.objects.get(pk=transaction.score_source.id)
+    month = Month.objects.get(pk=mid)
+    change_accounts(transaction, planned_expense, month, score, False)
     messages.success(request, u"Транзакція успішно видалена!")
     return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
 
 class AddTransaction(forms.Form):
     amount = forms.IntegerField(label=u"Розмір транзакції")
     detail = forms.CharField(label=u"Деталі", required=False)
+
+def change_accounts(transaction, expense, month, score, add):
+    if add:
+        if not expense.remainder:
+            expense.remainder = expense.amount
+        expense.remainder -= transaction.amount
+        month.balance -= transaction.amount
+        score.remainder -= transaction.amount
+    else:
+        expense.remainder += transaction.amount
+        month.balance += transaction.amount
+        score.remainder += transaction.amount
+    expense.save()
+    month.save()
+    score.save()

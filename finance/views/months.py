@@ -25,6 +25,7 @@ def home(request):
     content['months'] = Month.objects.all()
     content['accounts'] = Account.objects.all()
     content['scores'] = Score.objects.all()
+    content['months_approved'] = content['months'].filter(approved=True)
     form = AddMonth()
     form_account = AddAccount()
     return render(request, 'finance/home.html', 
@@ -33,7 +34,7 @@ def home(request):
 def show_month(request, mid):
     month = Month.objects.get(pk=mid)
     scores = Score.objects.filter(month=month)
-    expenses = PlannedExpense.objects.filter(month=month)
+    planned_expenses = PlannedExpense.objects.filter(month=month)
     transactions = Transaction.objects.filter(month=month)
     form = AddScore()
     form_planned_expense = AddExpense()
@@ -41,11 +42,17 @@ def show_month(request, mid):
     if request.method == "POST":
         month.approved = True
         month.save()
-        messages.success(request, u"Бюджет на %s затверджено!" % month.name)
+        messages.success(request, 
+            u"Бюджет на %s затверджено!" % month.name)
+    for planned_expense in planned_expenses:
+        expenses = Transaction.objects.filter(planned_expense=planned_expense)
+        planned_expense.expenses = expenses
     return render(request, 'finance/month.html', 
         {'month': month, 'scores': scores, 'form': form, 
-         'form_planned_expense': form_planned_expense, 'planned_expenses': expenses,
-         'form_transaction': form_transaction, 'transactions': transactions})
+         'form_planned_expense': form_planned_expense, 
+         'planned_expenses': planned_expenses,
+         'form_transaction': form_transaction, 
+         'transactions': transactions})
 
 def add_month(request):
     if request.method == "POST":
