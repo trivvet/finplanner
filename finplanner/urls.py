@@ -25,6 +25,7 @@ urlpatterns = [
     
     # Month URLS
     url(r'^month/(?P<mid>[0-9]+)/$', views.show_month, name="show_month"),
+    url(r'^month/(?P<mid>[0-9]+)/balance/$', views.show_balance, name="show_balance"),
     url(r'^month/add/$', views.add_month, name="add_month"),
     url(r'^month/(?P<mid>[0-9]+)/delete/$', views.delete_month, name="delete_month"),
 

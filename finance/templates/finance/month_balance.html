@@ -1,0 +1,232 @@
+{% extends "finance/base.html" %}
+
+{% block header %}
+<div class="row">
+    <div class="col-12 text-center mt-3" id="page-header">
+        <h1>Баланс за {{ month.name }}</h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div id="balance">
+            <h3>Наявні кошти</h3>
+            {% if scores %}
+            <table class="table">
+                <tbody>
+                    {% for score in scores %}
+                    {% if score.remainder > 0 %}
+                    <tr>
+                        <td>{{ score.account.name }}</td>
+                        <td>{{ score.remainder }}</td>
+                        <td>
+                            {% if month.approved is not True %}
+                            <a class="btn btn-outline-danger btn-sm" 
+                            href="{% url 'delete_score' month.id score.id %}">Видалити</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    <tr>
+                        <th>Всього на рахунках</th>
+                        <th>{{ month.balance }}</th>
+                        <td>
+                            {% if month.approved is not True %}
+                            <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
+                            href="#collapseAddScore" role="button" aria-expanded="false" aria-controls="collapseAddScore">Додати</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            {% else %}
+            Баланс порожній <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
+                            href="#collapseAddScore" role="button" aria-expanded="false" aria-controls="collapseAddScore">Додати</a>
+            {% endif %}
+            <div class="collapse" id="collapseAddScore">
+                <form action="{% url 'add_score' month.id %}" method="POST" 
+                    class="form-inline">
+                    {% csrf_token %}
+                    <div class="form-group ml-2">{{ form.account }}</div>
+                    <div class="form-group ml-2">{{ form.amount }}</div>
+                    <input type="submit" class="btn btn-success btn-sm ml-2" value="Додати">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div id="expenses">
+            <h3>Витрати</h3>
+            <div class="list-group">
+            {% for planned_expense in planned_expenses %}
+                <div class="list-group-item">
+                    <span {% if planned_expense.remainder == 0 %}class="expenses-end"{% endif %}>{{ planned_expense.title }} - 
+                    {{ planned_expense.amount }}</span>
+                    {% if planned_expense.expenses %}
+                        {% if planned_expense.remainder > 0 %}
+                        (Залишок - {{ planned_expense.remainder }})
+                        {% endif %}
+                        <ul class="list-group">
+                        {% for expense in planned_expense.expenses %}
+                            <li class="list-group-item {% if planned_expense.remainder == 0 %}expenses-end{% endif %}">
+                                {{ expense.date|date:"d.m" }} - {{ expense.amount }}грн 
+                                {% if expense.detail %}
+                                ({{ expense.detail }})
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+
+            <div class="collapse" id="collapseAddExpense">
+                <form action="{% url 'add_planned_expense' month.id %}" method="POST" 
+                    class="form-inline">
+                    {% csrf_token %}
+                    <div class="form-group ml-2">
+                        <label for="{{ form_planned_expense.title.id_for_label }}"
+                            class="mr-2">Витрата</label>
+                        {{ form_planned_expense.title }}
+                    </div>
+                    <div class="form-group ml-2">
+                        <label for="{{ form_planned_expense.amount.id_for_label }}"
+                            class="mr-2">Сума</label>
+                        {{ form_planned_expense.amount }}
+                    </div>
+                    <input type="submit" class="btn btn-success btn-sm ml-2" value="Додати">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12" id="transactions_form">
+        <a class="btn btn-outline-info" data-toggle="collapse"
+            href="#collapseAddTransactionAccount" role="button" aria-expanded="false" aria-controls="collapseAddTransactionAccount">Переведення між рахунками</a>
+        <a class="btn btn-outline-danger" data-toggle="collapse"
+            href="#collapseAddTransactionExpense" role="button" aria-expanded="false" aria-controls="collapseAddTransactionExpense">Додати витрату</a>
+        <div class="collapse" id="collapseAddTransactionAccount">
+            <form action="{% url 'add_transaction' month.id %}" method="POST" 
+                class="form-inline">
+                {% csrf_token %}
+                <div class="form-group ml-2">
+                    <label for="{{ form_transaction.amount.id_for_label }}" 
+                        class="mr-2">Перевести</label>
+                    {{ form_transaction.amount }}
+                </div>
+                <div class="form-group ml-2">
+                    <label for="source" class="mr-2">з рахунку</label>
+                    <select id="source" name="score_source">
+                        <option value="">----</option>
+                        {% for score in scores %}
+                        <option value="{{ score.id }}">{{ score.account.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group ml-2">
+                    <label for="goal" class="mr-2">на рахунок</label>
+                    <select id="goal" name="score_goal">
+                        <option value="">----</option>
+                        {% for score in scores %}
+                        <option value="{{ score.id }}">{{ score.account.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="submit" class="btn btn-primary btn-sm ml-2" value="Підтвердити">
+            </form>
+        </div>
+
+        <div class="collapse" id="collapseAddTransactionExpense">
+            <form action="{% url 'add_transaction' month.id %}" method="POST" 
+                class="form-inline">
+                {% csrf_token %}
+                <div class="form-group ml-2">
+                    <label for="{{ form_transaction.date.id_for_label }}" 
+                        class="mr-2">Дата</label>
+                    {{ form_transaction.date }}
+                </div>
+                <div class="form-group ml-2">
+                    <label for="{{ form_transaction.amount.id_for_label }}" 
+                        class="mr-2">Списати</label>
+                    {{ form_transaction.amount }}
+                </div>
+                <div class="form-group ml-2">
+                    <label for="source" class="mr-2">з рахунку</label>
+                    <select id="source" name="score_source">
+                        <option value="">----</option>
+                        {% for score in scores %}
+                        <option value="{{ score.id }}">{{ score.account.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group ml-2">
+                    <label for="planned_expense" class="mr-2">На</label>
+                    <select id="planned_expense" name="planned_expense">
+                        <option value="">----</option>
+                        {% for planned_expense in planned_expenses %}
+                        <option value="{{ planned_expense.id }}">{{ planned_expense.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group ml-2">
+                    <label for="{{ form_transaction.detail.id_for_label }}" 
+                        class="mr-2">Деталі</label>
+                    {{ form_transaction.detail }}
+                </div>
+                <input type="submit" class="btn btn-primary btn-sm ml-2" value="Підтвердити">
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div id="transactions">
+            <h3>Транзакції</h3>
+            {% if transactions %}
+                {% for transaction in transactions %}
+                    <p>
+                        {{ transaction.date|date:"d.m.y" }} {{ transaction }} - {{ transaction.amount }}
+                        <a class="btn btn-outline-danger btn-sm" href="{% url 'delete_transaction' month.id transaction.id %}">Видалити</a>
+                    </p>
+
+                {% endfor %}
+            {% else %}
+                <p>В даному місяці ще немає транзакцій</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="row mb-5">
+{% if not transactions %}
+<form action="{% url 'delete_month' month.id %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" class="btn btn-danger" value="Видалити балансовий розрахунок">
+</form>
+{% endif %}
+</div>
+
+
+<!-- <div class="row">
+    <div class="col" id="example">
+        <a class="btn btn-outline-info btn-sm" data-toggle="collapse" 
+            href="#exampleCollapse" role="button" aria-expanded="false" aria-controls="exampleCollapse">Приклад</a>
+    </div>
+    <div class="col-5 collapse" id="exampleCollapse">
+        <p>Examplse</p>
+    </div>
+</div>
+ -->
+
+
+
+{% endblock %}

@@ -15,7 +15,7 @@
         <h2>Місячні балансові рахунки</h2>
         {% if content.months_approved %}
         {% for month in content.months_approved %}
-        <p>{{ month }} <a class="btn btn-info btn-sm" href="/month/{{ month.id }}/">Деталі</a> <a class="btn btn-danger btn-sm" href="/month/{{ month.id }}/delete">Видалити</a></p>
+        <p>{{ month.name }} <a class="btn btn-info btn-sm" href="{% url 'show_balance' month.id %}">Деталі</a>
         {% endfor %}
         {% else %}
         Ні один баланс ще не затверджений
@@ -23,18 +23,18 @@
     </div>
     <div class="col-6">
         <h2>Місячні бюджети</h2>
-        {% if content.months %}
-        {% for month in content.months %}
-            <p>{{ month }} <a class="btn btn-info btn-sm" href="/month/{{ month.id }}/">Деталі</a> <a class="btn btn-danger btn-sm" href="/month/{{ month.id }}/delete">Видалити</a></p>
+        {% if content.months_disapproved %}
+        {% for month in content.months_disapproved %}
+            <p>{{ month.name }} <a class="btn btn-info btn-sm" href="{% url 'show_month' month.id %}">Деталі</a> <a class="btn btn-danger btn-sm" href="{% url 'delete_month' month.id %}">Видалити</a></p>
         {% endfor %}
+        {% else %}
+        Ні один бюджет ще не доданий
+        {% endif %}
         <form action="/month/add/" method="POST">
             {% csrf_token %}
             {{ form }}
             <input class="btn btn-success btn-sm" type="submit" value="Додати">
         </form>
-        {% else %}
-        Ні один бюджет ще не доданий
-        {% endif %}
     </div>
 </div>
 <div class="row">

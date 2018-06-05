@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 from django import forms
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.utils import timezone
 from django.urls import reverse
 
 from finance.models import Account, Month, PlannedExpense, Transaction, Score
@@ -41,7 +42,7 @@ def add_transaction(request, mid):
                 change_accounts(transaction, planned_expense, month, 
                     score_source, True)
                 messages.success(request, u"Витрата успішно додана!")
-    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
+    return HttpResponseRedirect(reverse("show_balance", kwargs={'mid': mid}))
 
 def delete_transaction(request, mid, tid):
     transaction = Transaction.objects.get(pk=tid)
@@ -51,9 +52,10 @@ def delete_transaction(request, mid, tid):
     month = Month.objects.get(pk=mid)
     change_accounts(transaction, planned_expense, month, score, False)
     messages.success(request, u"Транзакція успішно видалена!")
-    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
+    return HttpResponseRedirect(reverse("show_balance", kwargs={'mid': mid}))
 
 class AddTransaction(forms.Form):
+    date = forms.DateField(label=u"Дата", initial=timezone.now().strftime("%Y-%m-%d"))
     amount = forms.IntegerField(label=u"Розмір транзакції")
     detail = forms.CharField(label=u"Деталі", required=False)
 

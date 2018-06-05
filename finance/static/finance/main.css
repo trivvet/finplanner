@@ -17,6 +17,10 @@
     margin-top: 2em;
 }
 
+.expenses-end {
+    text-decoration: line-through;
+}
+
 #transactions {
     background-color: #d7e8fc;
     padding: 1em;
