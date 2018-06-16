@@ -24,14 +24,16 @@ def add_transaction(request, mid):
             score_source = Score.objects.get(pk=post_data.get('score_source', ''))
             data['score_source'] = score_source
             data['month'] = month
-            if post_data.get('score_goal', ''):
-                score_goal = Score.objects.get(pk=post_data.get('score_goal', ''))
+            score_goal_id = post_data.get('score_goal', '')
+            if score_goal_id:
+                score_goal = Score.objects.get(pk=score_goal_id)
                 data['score_goal'] = str(score_goal.id)
+                data['score_goal_name'] = score_goal.account.name
                 transaction = Transaction(**data)
                 transaction.save()
-                score_source.amount -= data['amount']
+                score_source.remainder -= data['amount']
                 score_source.save()
-                score_goal.amount += data['amount']
+                score_goal.remainder += data['amount']
                 score_goal.save()
                 messages.success(request, u"Переказ успішно доданий!")
             elif post_data.get('planned_expense', ''):
@@ -47,10 +49,17 @@ def add_transaction(request, mid):
 def delete_transaction(request, mid, tid):
     transaction = Transaction.objects.get(pk=tid)
     transaction.delete()
-    planned_expense = PlannedExpense.objects.get(pk=transaction.planned_expense.id)
-    score = Score.objects.get(pk=transaction.score_source.id)
     month = Month.objects.get(pk=mid)
-    change_accounts(transaction, planned_expense, month, score, False)
+    score_source = Score.objects.get(pk=transaction.score_source.id)
+    if transaction.planned_expense:
+        planned_expense = PlannedExpense.objects.get(pk=transaction.planned_expense.id)
+        change_accounts(transaction, planned_expense, month, score_source, False)
+    elif transaction.score_goal:
+        score_goal = Score.objects.get(pk=transaction.score_goal)
+        score_source.remainder += transaction.amount
+        score_goal.remainder -= transaction.amount
+        score_goal.save()
+        score_source.save()
     messages.success(request, u"Транзакція успішно видалена!")
     return HttpResponseRedirect(reverse("show_balance", kwargs={'mid': mid}))
 

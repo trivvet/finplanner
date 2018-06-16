@@ -21,6 +21,10 @@
     display: none;
 }
 
+.addTransaction {
+    display: none;
+}
+
 .expenses-end {
     text-decoration: line-through;
 }

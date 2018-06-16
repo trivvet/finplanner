@@ -52,7 +52,7 @@ def show_balance(request, mid):
     month = Month.objects.get(pk=mid)
     scores = Score.objects.filter(month=month)
     planned_expenses = PlannedExpense.objects.filter(month=month)
-    transactions = Transaction.objects.filter(month=month)
+    transactions = Transaction.objects.filter(month=month).order_by('date')
     form_transaction = AddTransaction()
     for planned_expense in planned_expenses:
         expenses = Transaction.objects.filter(planned_expense=planned_expense)

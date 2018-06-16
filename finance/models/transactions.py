@@ -29,7 +29,14 @@ class Transaction(models.Model):
         max_length=256,
         blank=True,
         null=True,
-        verbose_name="Transaction Goal"
+        verbose_name="Transaction Goal Id"
+    )
+
+    score_goal_name = models.CharField(
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Transaction Goal Name"
     )
 
     planned_expense = models.ForeignKey(
@@ -62,5 +69,7 @@ class Transaction(models.Model):
     def __unicode__(self):
         if self.planned_expense:
             return u"Витрати на %s" % (self.planned_expense.title)
+        elif self.score_goal_name:
+            return u"Переказ з рахунку %s на рахунок %s" % (self.score_source.account.name, self.score_goal_name)
         elif self.score_goal:
-            return u"Переказ з рахунку %s на рахунок %s за %s" % (self.score_source, self.score_goal, self.month.name)
+            return u"Переказ з рахунку %s на інший рахунок" % (self.score_source.account.name)

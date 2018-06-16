@@ -1,10 +1,23 @@
 function expenseAddButton() {
     $('#expenses .list-group-item').hover(
         function() {
-            $(this).children('.addExpense').toggle();
+            $(this).children('.addExpense').show();
         },
         function() {
-            $(this).children('.addExpense').toggle();
+            $(this).children('.addExpense').hide();
+        }
+    );
+}
+
+function transactionAddButton() {
+    $('#balance .list-group-item').hover(
+        function() {
+            $(this).find('.addTransaction').show();
+        },
+        function() {
+            if(!$(this).next().hasClass('show')) {
+                $(this).find('.addTransaction').hide();
+            }
         }
     );
 }
@@ -24,5 +37,6 @@ function addExpenseCalendar() {
 
 $(document).ready(function() {
     expenseAddButton();
+    transactionAddButton();
     addExpenseCalendar();
 });
