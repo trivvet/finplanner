@@ -17,6 +17,10 @@
     margin-top: 2em;
 }
 
+.addExpense {
+    display: none;
+}
+
 .expenses-end {
     text-decoration: line-through;
 }

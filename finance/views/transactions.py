@@ -56,8 +56,9 @@ def delete_transaction(request, mid, tid):
 
 class AddTransaction(forms.Form):
     date = forms.DateField(label=u"Дата", initial=timezone.now().strftime("%Y-%m-%d"))
-    amount = forms.IntegerField(label=u"Розмір транзакції")
-    detail = forms.CharField(label=u"Деталі", required=False)
+    amount = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': u"Сума"}))
+    detail = forms.CharField(label=u"Деталі", required=False,
+      widget=forms.TextInput(attrs={'placeholder': u"Деталі"}))
 
 def change_accounts(transaction, expense, month, score, add):
     if add:

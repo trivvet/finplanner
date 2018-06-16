@@ -58,7 +58,6 @@
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="col-12">
         <div id="expenses">
@@ -68,10 +67,16 @@
                 <div class="list-group-item">
                     <span {% if planned_expense.remainder == 0 %}class="expenses-end"{% endif %}>{{ planned_expense.title }} - 
                     {{ planned_expense.amount }}</span>
-                    {% if planned_expense.expenses %}
-                        {% if planned_expense.remainder > 0 %}
+                    {% if planned_expense.remainder and planned_expense.remainder > 0 %}
                         (Залишок - {{ planned_expense.remainder }})
-                        {% endif %}
+                    {% endif %}
+                    {% if planned_expense.remainder > 0 or planned_expense.remainder is None %}
+                        <a class="btn btn-outline-primary btn-sm addExpense" data-toggle="collapse"
+                            href="#collapseAddExpense{{ planned_expense.id }}" 
+                            role="button" aria-expanded="false" 
+                            aria-controls="collapseAddExpense{{ planned_expense.id }}">Списати</a>
+                    {% endif %}
+                    {% if planned_expense.expenses %}
                         <ul class="list-group">
                         {% for expense in planned_expense.expenses %}
                             <li class="list-group-item {% if planned_expense.remainder == 0 %}expenses-end{% endif %}">
@@ -83,26 +88,50 @@
                         {% endfor %}
                         </ul>
                     {% endif %}
+
+                    {% if planned_expense.remainder > 0 or planned_expense.remainder is None %}
+                    <div class="mt-2">
+                        <div class="collapse" id="collapseAddExpense{{ planned_expense.id }}">
+                            <form action="{% url 'add_transaction' month.id %}" method="POST" 
+                                class="form-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="planned_expense"
+                                    value="{{ planned_expense.id }}">
+                                <div class="form-group ml-2">
+                                    <div class="input-group date
+                                        data-target-input datetimepicker" data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input" data-target=".datetimepicker" 
+                                        name="date"/>
+                                        <div class="input-group-append" data-target=".datetimepicker" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group ml-2">
+                                    {{ form_transaction.amount }}
+                                </div>
+                                <div class="form-group ml-2">
+                                    <select id="source" name="score_source">
+                                        <option value="">Виберіть рахунок</option>
+                                        {% for score in scores %}
+                                            {% if score.remainder > 0 %}
+                                            <option value="{{ score.id }}">
+                                                {{ score.account.name }}
+                                            </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group ml-2">
+                                    {{ form_transaction.detail }}
+                                </div>
+                                <input type="submit" class="btn btn-success btn-sm ml-2" value="Додати">
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             {% endfor %}
-            </div>
-
-            <div class="collapse" id="collapseAddExpense">
-                <form action="{% url 'add_planned_expense' month.id %}" method="POST" 
-                    class="form-inline">
-                    {% csrf_token %}
-                    <div class="form-group ml-2">
-                        <label for="{{ form_planned_expense.title.id_for_label }}"
-                            class="mr-2">Витрата</label>
-                        {{ form_planned_expense.title }}
-                    </div>
-                    <div class="form-group ml-2">
-                        <label for="{{ form_planned_expense.amount.id_for_label }}"
-                            class="mr-2">Сума</label>
-                        {{ form_planned_expense.amount }}
-                    </div>
-                    <input type="submit" class="btn btn-success btn-sm ml-2" value="Додати">
-                </form>
             </div>
         </div>
     </div>

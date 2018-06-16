@@ -33,4 +33,5 @@ def delete_planned_expense(request, mid, pid):
 
 class AddExpense(forms.Form):
     title = forms.CharField(label=u"Назва запланованої витрати", max_length=256)
-    amount = forms.IntegerField(label=u"Розмір витрати")
+    amount = forms.IntegerField(label=u"Розмір витрати", 
+        widget=forms.NumberInput(attrs={'placeholder': u'Сума'}))
