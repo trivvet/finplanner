@@ -44,8 +44,11 @@ def delete_score(request, mid, sid):
 class AddScore(forms.Form):
     accounts = Account.objects.all()
     account_choices = []
-    for account in accounts:
-        choice = (account.id, account.name)
-        account_choices.append(choice)
+    try:
+        accounts
+    except ProgrammingError:
+        for account in accounts:
+            choice = (account.id, account.name)
+            account_choices.append(choice)
     account = forms.ChoiceField(label=u"Рахунок", choices=account_choices)
     amount = forms.IntegerField(label=u"Залишок")
