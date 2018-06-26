@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import locale
+from datetime import datetime
+
 from django import forms
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.urls import reverse
-# from django.http import HttpResponse
 
 from finance.models import Account, Month, Score, PlannedExpense, Transaction
 from accounts import AddAccount
@@ -24,10 +26,9 @@ def home(request):
     content['scores'] = Score.objects.all()
     content['months_approved'] = content['months'].filter(approved=True)
     content['months_disapproved'] = content['months'].exclude(approved=True)
-    form = AddMonth()
     form_account = AddAccount()
     return render(request, 'finance/home.html', 
-        {'content': content, 'form': form, 'form_account': form_account})
+        {'content': content, 'form_account': form_account})
 
 def show_month(request, mid):
     month = Month.objects.get(pk=mid)
@@ -65,16 +66,16 @@ def show_balance(request, mid):
 
 def add_month(request):
     if request.method == "POST":
-        form = AddMonth(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            month = Month(name=name)
-            month.save()
-            messages.success(request, u"Бюджет на %s успішно доданий!" % month.name)
+        date = request.POST.get("month_date", '')
+        month = {}
+        month_date = datetime.strptime(date, "%Y-%m")
+        locale.setlocale(locale.LC_ALL, 'uk_UA.utf8')
+        month['name'] = unicode(month_date.strftime('%B'), "utf-8")
+        month['date'] = month_date
+        month = Month(**month)
+        month.save()
+        messages.success(request, u"Бюджет за {} успішно доданий!".format(month.name))
     return HttpResponseRedirect(reverse("home"))
-
-class AddMonth(forms.Form):
-    name = forms.CharField(label="", max_length=50)
 
 def delete_month(request, mid):
     month = Month.objects.get(pk=mid)

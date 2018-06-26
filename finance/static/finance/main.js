@@ -35,8 +35,16 @@ function addExpenseCalendar() {
     });
 }
 
+function addMonthesCalendar() {
+    $('#datetimepicker4').datetimepicker({
+        locale: 'uk',
+        format: "YYYY-MM"
+    });
+}
+
 $(document).ready(function() {
     expenseAddButton();
     transactionAddButton();
     addExpenseCalendar();
+    addMonthesCalendar();
 });

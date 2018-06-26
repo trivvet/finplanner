@@ -1,4 +1,6 @@
 {% extends "finance/base.html" %}
+
+{% load i18n %}
         
 {% block header %}
 <div class="row">
@@ -33,6 +35,13 @@
         <form action="/month/add/" method="POST">
             {% csrf_token %}
             {{ form }}
+            <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+                <input type="text" class="datetimepicker-input" data-target="#datetimepicker4"
+                    name="month_date" laceholder="Виберіть бюджетний місяць"/>
+                <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
             <input class="btn btn-success btn-sm" type="submit" value="Додати">
         </form>
     </div>

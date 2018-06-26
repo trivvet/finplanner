@@ -17,6 +17,11 @@ class Month(models.Model):
         verbose_name="Month Name"
     )
 
+    date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="Start Date of Month")
+
     balance = models.IntegerField(
         blank=False,
         null=False,
