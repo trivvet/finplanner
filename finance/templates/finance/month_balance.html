@@ -10,6 +10,8 @@
 
 {% block content %}
 
+<p hidden>adf;lkdjaf</p>
+
 <!-- Наявні кошти -->
 <div class="row">
     <div class="col-12">
@@ -94,18 +96,19 @@
             {% for planned_expense in planned_expenses %}
                 <div class="list-group-item">
 
-                    {% if planned_expense.expenses %}
-                    <a data-toggle="collapse" role="button" aria-expanded="false"
-                        href="#collapseExpensesList{{ planned_expense.id }}" 
-                         aria-controls="collapseExpensesList{{ planned_expense.id }}">
-                        <i class="fa fa-arrow-circle-down fa-2x" aria-hidden="true"></i>
-                    </a>
-                    {% endif %}
+                    <span {% if planned_expense.remainder == 0 %}class="expenses-end"{% endif %}>
+                        {% if planned_expense.expenses %}
+                            <a data-toggle="collapse" role="button" aria-expanded="false"
+                                href="#collapseExpensesList{{ planned_expense.id }}" 
+                                aria-controls="collapseExpensesList{{ planned_expense.id }}">
+                                {{ planned_expense.title }} - {{ planned_expense.amount }}
+                            </a>
+                        {% else %}
+                            {{ planned_expense.title }} - {{ planned_expense.amount }}
+                        {% endif %}
+                    </span>
 
-                    <span {% if planned_expense.remainder == 0 %}class="expenses-end"{% endif %}>{{ planned_expense.title }} - 
-                    {{ planned_expense.amount }}</span>
-
-                    {% if planned_expense.remainder and planned_expense.remainder > 0 %}
+                    {% if planned_expense.remainder != planned_expense.amount and planned_expense.remainder > 0 %}
                         (Залишок - {{ planned_expense.remainder }})
                     {% endif %}
 

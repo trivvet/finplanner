@@ -47,6 +47,8 @@ class AddScore(forms.Form):
     try:
         accounts
     except ProgrammingError:
+        accounts = []
+    else:
         for account in accounts:
             choice = (account.id, account.name)
             account_choices.append(choice)
