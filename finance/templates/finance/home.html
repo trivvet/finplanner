@@ -97,7 +97,8 @@
         </a>
         <div class="collapse" id="collapseAddMoney">
             <div class="card card-body">
-                <form action="" method="POST" class="form-inline">
+                <form action="{% url 'add_plus_transaction' %}" 
+                    method="POST" class="form-inline">
                     {% csrf_token %}
                     <div class="form-group ml-2">
                         <div class="input-group date

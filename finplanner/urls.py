@@ -45,8 +45,9 @@ urlpatterns = [
         name="delete_planned_expense"),
 
     #Transaction URLS
-    url(r'^month/(?P<mid>[0-9]+)/transaction/add/$', views.add_transaction,
+    url(r'^transaction/month/(?P<mid>[0-9]+)/add/$', views.add_transaction,
         name="add_transaction"),
-    url(r'^month/(?P<mid>[0-9]+)/transaction/(?P<tid>[0-9]+)/delete/$', views.delete_transaction,
+    url(r'^transaction/(?P<tid>[0-9]+)/month/(?P<mid>[0-9]+)/delete/$', views.delete_transaction,
         name="delete_transaction"),
+    url(r'^transation/add/$', views.add_plus_transaction, name="add_plus_transaction")
 ]

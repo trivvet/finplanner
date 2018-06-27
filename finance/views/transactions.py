@@ -63,6 +63,10 @@ def delete_transaction(request, mid, tid):
     messages.success(request, u"Транзакція успішно видалена!")
     return HttpResponseRedirect(reverse("show_balance", kwargs={'mid': mid}))
 
+def add_plus_transaction(request):
+    messages.success(request, u"Гроші на рахунок успішно зараховано!")
+    return HttpResponseRedirect(reverse("home"))
+
 class AddTransaction(forms.Form):
     date = forms.DateField(label=u"Дата", initial=timezone.now().strftime("%Y-%m-%d"))
     amount = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': u"Сума"}))
