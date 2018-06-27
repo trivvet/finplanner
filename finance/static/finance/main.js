@@ -24,9 +24,15 @@ function transactionAddButton() {
 
 function addExpenseCalendar() {
     var today = new Date();
+    var monthDate = $('#month_date').text();
+    if (monthDate) {
+        monthDate = new Date(monthDate);
+    }
     $('.datetimepicker').datetimepicker({
         locale: 'uk',
         format: "YYYY-MM-DD",
+        useCurrent: false,
+        date: monthDate,
         maxDate: today,
         buttons: {
             showToday: true,

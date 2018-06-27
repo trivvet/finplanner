@@ -1,7 +1,9 @@
+/* global styles */
 .navbar {
     margin-bottom: 1em;
 }
 
+/* other pages */
 #balance {
     background-color: #dbfcbe;
     padding: 1em;
@@ -46,15 +48,3 @@
 .list-group-item {
     background-color: inherit;
 }
-
-/*#example {
-    background-color: red;
-    margin-top: 3em;
-    height: 5em;
-}
-
-#exampleCollapse {
-    background: green;
-    height: 5em;
-    margin-top: 3em;
-}*/

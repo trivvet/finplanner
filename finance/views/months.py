@@ -70,7 +70,9 @@ def add_month(request):
         month = {}
         month_date = datetime.strptime(date, "%Y-%m")
         locale.setlocale(locale.LC_ALL, 'uk_UA.utf8')
-        month['name'] = unicode(month_date.strftime('%B'), "utf-8")
+        month_name = unicode(month_date.strftime('%B'), 'utf8').capitalize()
+        year = month_date.year
+        month['name'] = "{} {}".format(month_name, year)
         month['date'] = month_date
         month = Month(**month)
         month.save()

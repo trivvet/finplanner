@@ -26,6 +26,14 @@ def add_account(request):
             messages.success(request, u"Рахунок %s успішно доданий" % account.name)
     return HttpResponseRedirect(reverse("home"))
 
+def delete_account(request, aid):
+    if request.method == "POST":
+        account = Account.objects.get(pk=aid)
+        account.delete()
+        messages.success(request, u"Рахунок %s (%s) успішно видалений" % 
+            (account.name, account.kind))
+    return HttpResponseRedirect(reverse("home"))
+
 class AddAccount(forms.Form):
     name = forms.CharField(label=u"Назва рахунку", max_length=50)
     kind = forms.ChoiceField(label=u"Вид рахунку", choices=TYPE_OF_ACCOUNT)
