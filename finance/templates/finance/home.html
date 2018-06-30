@@ -134,6 +134,15 @@
             </div>
         </div>
     </div>
+
+    <div class="col-6">
+        <h2>Зарахування</h2>
+        <ul>
+        {% for trans in content.add_transactions %}
+            <li>{{ trans.date }} - {{ trans.amount }} ({{ trans.account_goal }})</li>
+        {% endfor %}
+        </ul>
+    </div>
 </div>
 
 {% endblock %}

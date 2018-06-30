@@ -46,11 +46,10 @@ class AddScore(forms.Form):
     account_choices = []
     try:
         accounts
-    except ProgrammingError:
-        accounts = []
-    else:
         for account in accounts:
             choice = (account.id, account.name)
             account_choices.append(choice)
+    except:
+        accounts = []
     account = forms.ChoiceField(label=u"Рахунок", choices=account_choices)
     amount = forms.IntegerField(label=u"Залишок")

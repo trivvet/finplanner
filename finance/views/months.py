@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.urls import reverse
 
-from finance.models import Account, Month, Score, PlannedExpense, Transaction
+from finance.models import Account, Month, Score, PlannedExpense, Transaction, TransactionToAccount
 from accounts import AddAccount
 from .scores import AddScore
 from .expenses import AddExpense
@@ -27,6 +27,7 @@ def home(request):
     content['months_approved'] = content['months'].filter(approved=True)
     content['months_disapproved'] = content['months'].exclude(approved=True)
     form_account = AddAccount()
+    content['add_transactions'] = TransactionToAccount.objects.all()
     return render(request, 'finance/home.html', 
         {'content': content, 'form_account': form_account})
 
