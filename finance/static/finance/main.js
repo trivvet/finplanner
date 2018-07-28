@@ -28,6 +28,7 @@ function addExpenseCalendar() {
     if (monthDate) {
         monthDate = new Date(monthDate);
     }
+    today.setDate(today.getDate() + 1);
     $('.datetimepicker').datetimepicker({
         locale: 'uk',
         format: "YYYY-MM-DD",

@@ -121,7 +121,7 @@
                             <option value="">Виберіть рахунок</option>
                             {% for account in content.accounts %}
                                 <option value="{{ account.id }}">
-                                    {{ account.name }}
+                                    {{ account.name }} ({{ account.money }})
                                 </option>
                             {% endfor %}
                         </select>
@@ -140,6 +140,7 @@
         <ul>
         {% for trans in content.add_transactions %}
             <li>{{ trans.date }} - {{ trans.amount }} ({{ trans.account_goal }})</li>
+            <a class="btn btn-danger btn-sm" href="{% url 'delete_plus_transaction' trans.id %}">Видалити</a>
         {% endfor %}
         </ul>
     </div>

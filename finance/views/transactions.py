@@ -74,11 +74,22 @@ def add_plus_transaction(request):
         transaction.save()
         account = data['account_goal']
         if account.money:
-            account.money += transaction.amount
+            account.money += int(transaction.amount)
         else:
             account.money = transaction.amount
         account.save()
     messages.success(request, u"Гроші на рахунок успішно зараховано!")
+    return HttpResponseRedirect(reverse("home"))
+
+def delete_plus_transaction(request, tid):
+    transaction = TransactionToAccount.objects.get(pk=tid)
+    account = transaction.account_goal
+    if account.money > transaction.amount:
+        account.money -= transaction.amount
+        account.save()
+    transaction.delete()
+    messages.warning(request, 
+        "Нарахування {} успішно видалене".format(transaction))
     return HttpResponseRedirect(reverse("home"))
 
 class AddTransaction(forms.Form):

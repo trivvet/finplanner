@@ -191,7 +191,7 @@
                 {% for transaction in transactions %}
                     <p>
                         {{ transaction.date|date:"d.m.y" }} {{ transaction }} - {{ transaction.amount }}
-                        <a class="btn btn-outline-danger btn-sm" href="{% url 'delete_transaction' month.id transaction.id %}">Видалити</a>
+                        <a class="btn btn-outline-danger btn-sm" href="{% url 'delete_transaction' transaction.id month.id %}">Видалити</a>
                     </p>
 
                 {% endfor %}
