@@ -21,14 +21,21 @@ def add_score(request, mid):
         if form.is_valid():
             data = form.cleaned_data
             month = Month.objects.get(pk=mid)
-            data['account'] = Account.objects.get(pk=form.cleaned_data['account'])
+            account = Account.objects.get(pk=form.cleaned_data['account'])
+            amount = form.cleaned_data['amount']
+            data['account'] = account
             data['month'] = month
-            data['amount'] = form.cleaned_data['amount']
+            data['amount'] = amount
             data['remainder'] = form.cleaned_data['amount']
             score = Score(**data)
             score.save()
-            month.balance += data['amount']
+            month.balance += amount
             month.save()
+            if account.blocked:
+                account.blocked += amount
+            else:
+                account.blocked = amount
+            account.save()
             messages.success(request, u"Надходження на %s успішно додане!" % score.account.name)
     return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
 
@@ -38,18 +45,21 @@ def delete_score(request, mid, sid):
     month = Month.objects.get(pk=mid)
     month.balance -= score.amount
     month.save()
+    account = score.account
+    account.blocked -= score.amount
+    account.save()
     messages.success(request, u"Надходження на %s успішно видалене!" % score.account.name)
     return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
 
 class AddScore(forms.Form):
-    accounts = Account.objects.all()
-    account_choices = []
-    try:
-        accounts
-        for account in accounts:
-            choice = (account.id, account.name)
+
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(*args, **kwargs)
+        account_choices = []
+        for account in Account.objects.all():
+            choice = (account.id, account.remainder())
             account_choices.append(choice)
-    except:
-        accounts = []
-    account = forms.ChoiceField(label=u"Рахунок", choices=account_choices)
+        self.fields['account'].choices = account_choices
+
+    account = forms.ChoiceField(label=u"Рахунок")
     amount = forms.IntegerField(label=u"Залишок")

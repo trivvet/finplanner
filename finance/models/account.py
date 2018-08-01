@@ -45,3 +45,8 @@ class Account(models.Model):
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.kind)
 
+    def remainder(self):
+        print "answer"
+        answer = "{} ({})".format(self.name, self.money - self.blocked)
+        return answer
+
