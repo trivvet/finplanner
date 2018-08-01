@@ -1,3 +1,4 @@
+from .finances import new_home
 from .months import home, add_month, show_month, show_balance, delete_month
 from .accounts import add_account, delete_account
 from .scores import add_score, delete_score

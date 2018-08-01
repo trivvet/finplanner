@@ -3,6 +3,11 @@
     margin-bottom: 1em;
 }
 
+/* new home page */
+#navbar-list .nav-link{
+    border: 1px solid #eeeeee;
+}
+
 /* other pages */
 #balance {
     background-color: #dbfcbe;
