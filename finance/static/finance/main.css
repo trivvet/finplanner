@@ -3,6 +3,12 @@
     margin-bottom: 1em;
 }
 
+@media (min-width: 1200px) {
+  .container{
+    max-width: 1600px;
+  }
+}
+
 /* new home page */
 #navbar-list .nav-link{
     border: 1px solid #eeeeee;

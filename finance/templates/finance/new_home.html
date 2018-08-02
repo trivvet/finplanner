@@ -8,9 +8,117 @@
 
 {% block content %}
 <nav class="nav nav-pills nav-justified" id="navbar-list">
-    <a class="nav-item nav-link active" href="">Баланси</a>
-    <a class=" nav-item nav-link" href="">Бюджети</a>
-    <a class="nav-link nav-item" href="">Рахунки</a>
-    <a class="nav-link nav-item" href="">Залишки</a>
+    <a class="nav-item nav-link {% if not request.GET.list %}active{% endif %}" href="{% url 'new_home' %}">Баланси</a>
+    <a class=" nav-item nav-link {% if request.GET.list == 'budgets' %}active{% endif %}" href="{% url 'new_home' %}?list=budgets">Бюджети</a>
+    <a class="nav-link nav-item {% if request.GET.list == 'accounts' %}active{% endif %}" href="{% url 'new_home' %}?list=accounts">Рахунки</a>
+    <a class="nav-link nav-item {% if request.GET.list == 'remnants' %}active{% endif %}" href="{% url 'new_home' %}?list=remnants">Залишки</a>
 </nav>
+
+{% if content.add_form %}
+<form class="form-horizontal" action="/month/add/" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+        <input type="text" class="datetimepicker-input" data-target="#datetimepicker4"
+            name="month_date" placeholder="Виберіть бюджетний місяць"/>
+        <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+        </div>
+    </div>
+    <input class="btn btn-success btn-sm" type="submit" value="Додати">
+</form>
+{% endif %}
+
+{% if content.months %}
+<table class="table table-hover table-responsive-lg">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Місяць</th>
+            <th scope="col">Баланс</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        
+        {% for month in content.months %}
+        <tr>
+            <td class="td-link">{{ month.name }}</td>
+            <td class="td-link">{{ month.balance }}</td>
+            <td class="td-link">
+                <a class="btn btn-info btn-sm" href="{% if not request.GET.list %}{% url 'show_balance' month.id %}{% else %}{% url 'show_month' month.id %}{% endif %}">Деталі</a>
+                {% if request.GET.list == 'budgets' %}
+                <a class="btn btn-danger btn-sm" href="{% url 'delete_month' month.id %}">Видалити</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% elif content.accounts %}
+<table class="table table-hover table-responsive-lg">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Назва рахунку</th>
+            <th scope="col">Вид рахунку</th>
+            <th scope="col">Загальні кошти</th>
+            <th scope="col">Заблоковані кошти</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        
+        {% for account in content.accounts %}
+        <tr>
+            <td class="td-link">{{ account.name }}</td>
+            <td class="td-link">{{ account.kind }}</td>
+            <td class="td-link">{{ account.money }}</td>
+            <td class="td-link">{{ account.blocked }}</td>
+            <td class="td-link">
+                <a class="btn btn-info btn-sm" href="#">Деталі</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+
+{% elif content.remnants %}
+<table class="table table-hover table-responsive-lg">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Рахунок</th>
+            <th scope="col">Місяць</th>
+            <th scope="col">Передбачені кошти</th>
+            <th scope="col">Залишок</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        
+        {% for score in content.remnants %}
+        <tr>
+            <td class="td-link">{{ score.account.name }}</td>
+            <td class="td-link">{{ score.month.name }}</td>
+            <td class="td-link">{{ score.amount }}</td>
+            <td class="td-link">{{ score.remainder }}</td>
+            <td class="td-link">
+                <a class="btn btn-info btn-sm" href="#">Деталі</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+{% endif %}
+
+
 {% endblock content %}
