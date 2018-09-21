@@ -79,7 +79,8 @@ def add_plus_transaction(request):
             account.money = transaction.amount
         account.save()
     messages.success(request, u"Гроші на рахунок успішно зараховано!")
-    return HttpResponseRedirect(reverse("home"))
+    url = reverse("new_home") + "?list=accounts"
+    return HttpResponseRedirect(url)
 
 def delete_plus_transaction(request, tid):
     transaction = TransactionToAccount.objects.get(pk=tid)

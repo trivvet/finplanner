@@ -43,7 +43,8 @@ def show_month(request, mid):
         month.save()
         messages.success(request, 
             u"Бюджет на %s затверджено!" % month.name)
-        return HttpResponseRedirect(reverse("home"))
+        url = reverse("new_home") + "?list=budgets"
+        return HttpResponseRedirect(url)
     else:
         return render(request, 'finance/month.html', 
             {'month': month, 'scores': scores, 'form': form, 
