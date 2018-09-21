@@ -14,10 +14,11 @@
     <a class="nav-link nav-item {% if request.GET.list == 'remnants' %}active{% endif %}" href="{% url 'new_home' %}?list=remnants">Залишки</a>
 </nav>
 
-{% if content.add_form %}
+
+{% if content.add_form == 'budgets' %}
+
 <form class="form-horizontal" action="/month/add/" method="POST">
-    {% csrf_token %}
-    {{ form }}
+{% csrf_token %}
     <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
         <input type="text" class="datetimepicker-input" data-target="#datetimepicker4"
             name="month_date" placeholder="Виберіть бюджетний місяць"/>
@@ -25,8 +26,22 @@
             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
         </div>
     </div>
+</form>
+
+{% elif content.add_form == 'accounts' %}
+
+<form class="form-horizontal" action="/account/add/" method="POST">
+    {% csrf_token %}
+    <div class="input-group">
+        Назва рахунку: <input type="text" name="name" />
+        Вид рахунку: <select name="kind">
+            <option value="cash">Готівка</option>
+            <option value="bank">Банк</option>
+        </select>
+    </div>
     <input class="btn btn-success btn-sm" type="submit" value="Додати">
 </form>
+
 {% endif %}
 
 {% if content.months %}
@@ -81,6 +96,10 @@
             <td class="td-link">{{ account.blocked }}</td>
             <td class="td-link">
                 <a class="btn btn-info btn-sm" href="#">Деталі</a>
+                <form class="d-inline" action="{% url 'delete_account' account.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" href="{% url 'delete_account' account.id %}">Видалити</button>
+                </form>
             </td>
         </tr>
         {% endfor %}

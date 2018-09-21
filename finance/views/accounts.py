@@ -23,8 +23,10 @@ def add_account(request):
             data['kind'] = form.cleaned_data['kind']
             account = Account(**data)
             account.save()
-            messages.success(request, u"Рахунок %s успішно доданий" % account.name)
-    return HttpResponseRedirect(reverse("home"))
+            messages.success(request, 
+                u"Рахунок %s успішно доданий" % account.name)
+    url = reverse("new_home") + "?list=accounts"
+    return HttpResponseRedirect(url)
 
 def delete_account(request, aid):
     if request.method == "POST":
@@ -32,7 +34,8 @@ def delete_account(request, aid):
         account.delete()
         messages.success(request, u"Рахунок %s (%s) успішно видалений" % 
             (account.name, account.kind))
-    return HttpResponseRedirect(reverse("home"))
+    url = reverse("new_home") + "?list=accounts"
+    return HttpResponseRedirect(url)
 
 class AddAccount(forms.Form):
     name = forms.CharField(label=u"Назва рахунку", max_length=50)

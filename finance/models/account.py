@@ -46,7 +46,9 @@ class Account(models.Model):
         return u"%s (%s)" % (self.name, self.kind)
 
     def remainder(self):
-        print "answer"
-        answer = "{} ({})".format(self.name, self.money - self.blocked)
+        if self.blocked:
+            answer = "{} ({})".format(self.name, self.money - self.blocked)
+        else:
+            answer = "{} ({})".format(self.name, self.money)
         return answer
 

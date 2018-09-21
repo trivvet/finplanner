@@ -78,10 +78,10 @@ def add_month(request):
         month = Month(**month)
         month.save()
         messages.success(request, u"Бюджет за {} успішно доданий!".format(month.name))
-    return HttpResponseRedirect(reverse("home"))
+    return HttpResponseRedirect(reverse("new_home"))
 
 def delete_month(request, mid):
     month = Month.objects.get(pk=mid)
     month.delete()
     messages.success(request, u"Бюджет на %s успішно видалений!" % month.name)
-    return HttpResponseRedirect(reverse("home"))
+    return HttpResponseRedirect(reverse("new_home"))

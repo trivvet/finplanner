@@ -12,6 +12,7 @@ def new_home(request):
         content['add_form'] = 'budgets'
     elif request.GET.get('list', '') == 'accounts':
         content['accounts'] = Account.objects.all()
+        content['add_form'] = 'accounts'
     elif request.GET.get('list', '') == 'remnants':
         content['remnants'] = Score.objects.all()
     else:
