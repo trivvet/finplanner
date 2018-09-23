@@ -1,0 +1,43 @@
+{% extends "finance/base.html" %}
+
+{% block header %}
+<div class="row">
+    <div class="col-12 text-center mt-3" id="page-header">
+        <h1>Деталі рахунку {{ account.name }}</h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Кошти на рахунку - {{ account.money }}</h2>
+        <h3 class="text-info">З них у використанні - {{ account.blocked }}</h3>
+        {% if transactions %}
+        <table class="table">
+            <tbody>
+                {% for transaction in transactions %}
+<!--                 <tr>
+                    <td>{{ score.account.name }}</td>
+                    <td>{{ score.remainder }}</td>
+                    <td>
+                        <a class="btn btn-outline-danger btn-sm" 
+                            href="{% url 'delete_score' month.id score.id %}">Видалити</a>
+                    </td>
+                {% endfor %}
+                <tr>
+                    <th>Всього на рахунках</th>
+                    <th>{{ month.balance }}</th>
+                    <td>
+                        <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
+                        href="#collapseAddScore" role="button" aria-expanded="false" aria-controls="collapseAddScore">Додати</a>
+                    </td>
+                </tr> -->
+            </tbody>
+        </table>
+        {% else %}
+        Ще немає руху коштів по рахунку
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

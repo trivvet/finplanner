@@ -14,6 +14,11 @@ TYPE_OF_ACCOUNT = (
     ('bank', u"Банк"),
 )
 
+def account_detail(request, aid):
+    account = Account.objects.get(pk=aid)
+    return render(request, "finance/account_detail.html", 
+        {"account": account})
+
 def add_account(request):
     if request.method == "POST":
         form = AddAccount(request.POST)

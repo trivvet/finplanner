@@ -96,7 +96,7 @@
             <td class="td-link">{{ account.money }}</td>
             <td class="td-link">{{ account.blocked }}</td>
             <td class="td-link">
-                <a class="btn btn-info btn-sm" href="#">Деталі</a>
+                <a class="btn btn-info btn-sm" href="{% url 'account_detail' account.id %}">Деталі</a>
                 <form class="d-inline" action="{% url 'delete_account' account.id %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm" href="{% url 'delete_account' account.id %}">Видалити</button>

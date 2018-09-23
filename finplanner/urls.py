@@ -32,7 +32,10 @@ urlpatterns = [
 
     # Accoun URLS
     url(r'^account/add/$', views.add_account, name="add_account"),
-    url(r'^account/(?P<aid>[0-9]+)/delete/$', views.delete_account, name="delete_account"),
+    url(r'^account/(?P<aid>[0-9]+)/delete/$', 
+        views.delete_account, name="delete_account"),
+    url(r'^account/(?P<aid>[0-9]+)/detail/$',
+        views.account_detail, name="account_detail"),
 
     # Score URLS
     url(r'^month/(?P<mid>[0-9]+)/score/add/$', views.add_score, name="add_score"),
