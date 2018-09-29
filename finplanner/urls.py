@@ -54,5 +54,6 @@ urlpatterns = [
     url(r'^transaction/(?P<tid>[0-9]+)/month/(?P<mid>[0-9]+)/delete/$', views.delete_transaction,
         name="delete_transaction"),
     url(r'^transation/add/$', views.add_plus_transaction, name="add_plus_transaction"),
-    url(r'^transation/(?P<tid>[0-9]+)/delete/$', views.delete_plus_transaction, name="delete_plus_transaction")
+    url(r'^transation/(?P<tid>[0-9]+)/delete/$', 
+        views.delete_plus_transaction, name="delete_plus_transaction")
 ]

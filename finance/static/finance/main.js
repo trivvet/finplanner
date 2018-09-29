@@ -42,6 +42,17 @@ function addExpenseCalendar() {
     });
 }
 
+function addMoneyCalendar() {
+    var today = new Date();
+    $('.datetimepicker2').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
+        sideBySide: true,
+        locale: 'uk',
+        date: today,
+        stepping: 30
+    });
+}
+
 function addMonthesCalendar() {
     $('#datetimepicker4').datetimepicker({
         locale: 'uk',
@@ -54,4 +65,5 @@ $(document).ready(function() {
     transactionAddButton();
     addExpenseCalendar();
     addMonthesCalendar();
+    addMoneyCalendar();
 });

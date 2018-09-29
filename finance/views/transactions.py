@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
 
-from finance.models import Account, Month, PlannedExpense, Transaction, Score, TransactionToAccount
+from finance.models import Account, Month, PlannedExpense, Transaction, Score, TransactionToAccount, AccountTransaction
 
 def add_transaction(request, mid):
     if request.method == "POST":
@@ -66,13 +66,12 @@ def delete_transaction(request, mid, tid):
 def add_plus_transaction(request):
     if request.method == "POST":
         data = {}
-        account_id = request.POST.get('score_source')
-        data['account_goal'] = Account.objects.get(pk=account_id)
+        data['account'] = Account.objects.get(pk=account_id)
         data['date'] = request.POST.get('date')
         data['amount'] = request.POST.get('money')
-        transaction = TransactionToAccount(**data)
+        data['detail'] = request.POST.get('detail')
+        transaction = AccountTransaction(**new_data)
         transaction.save()
-        account = data['account_goal']
         if account.money:
             account.money += int(transaction.amount)
         else:
@@ -83,15 +82,16 @@ def add_plus_transaction(request):
     return HttpResponseRedirect(url)
 
 def delete_plus_transaction(request, tid):
-    transaction = TransactionToAccount.objects.get(pk=tid)
-    account = transaction.account_goal
-    if account.money > transaction.amount:
+    transaction = AccountTransaction.objects.get(pk=tid)
+    account = transaction.account
+    if account.money >= transaction.amount:
         account.money -= transaction.amount
         account.save()
     transaction.delete()
     messages.warning(request, 
-        "Нарахування {} успішно видалене".format(transaction))
-    return HttpResponseRedirect(reverse("home"))
+        u"Транзакція по рахунку {} успішно видалена".format(
+            transaction.account.name, transaction))
+    return HttpResponseRedirect(reverse("new_home"))
 
 class AddTransaction(forms.Form):
     date = forms.DateField(label=u"Дата", initial=timezone.now().strftime("%Y-%m-%d"))

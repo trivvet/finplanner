@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from finance.models import Account
+from finance.models import Account, AccountTransaction
 
 TYPE_OF_ACCOUNT = (
     ('cash', u"Готівка"),
@@ -16,8 +16,9 @@ TYPE_OF_ACCOUNT = (
 
 def account_detail(request, aid):
     account = Account.objects.get(pk=aid)
+    transactions = AccountTransaction.objects.filter(account=account)
     return render(request, "finance/account_detail.html", 
-        {"account": account})
+        {"account": account, "transactions": transactions})
 
 def add_account(request):
     if request.method == "POST":

@@ -11,28 +11,29 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
+        {% if account.money or account.blocked %}
         <h2>Кошти на рахунку - {{ account.money }}</h2>
         <h3 class="text-info">З них у використанні - {{ account.blocked }}</h3>
+        {% else %}
+        <h2>Відомості по рахунку відсутні</h2>
+        {% endif %}
         {% if transactions %}
         <table class="table">
             <tbody>
-                {% for transaction in transactions %}
-<!--                 <tr>
-                    <td>{{ score.account.name }}</td>
-                    <td>{{ score.remainder }}</td>
-                    <td>
-                        <a class="btn btn-outline-danger btn-sm" 
-                            href="{% url 'delete_score' month.id score.id %}">Видалити</a>
-                    </td>
-                {% endfor %}
                 <tr>
-                    <th>Всього на рахунках</th>
-                    <th>{{ month.balance }}</th>
-                    <td>
-                        <a class="btn btn-outline-success btn-sm" data-toggle="collapse"
-                        href="#collapseAddScore" role="button" aria-expanded="false" aria-controls="collapseAddScore">Додати</a>
-                    </td>
-                </tr> -->
+                    <td>Дата</td>
+                    <td>Деталі</td>
+                    <td>Сума</td>
+                    <td>Дії</td>
+                </tr>
+                {% for transaction in transactions %}
+                <tr {% if transaction.amount < 0 %}class="text-danger"{% elif transaction.amount > 0 %}class="text-success"{% endif %} >
+                    <td>{{ transaction.date }}</td>
+                    <td>{{ transaction.detail }}</td>
+                    <td>{{ transaction.amount }}</td>
+                    <td><a class="btn btn-sm btn-outline-danger" href="{% url 'delete_plus_transaction' transaction.id %}">Видалити</a></td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
         {% else %}

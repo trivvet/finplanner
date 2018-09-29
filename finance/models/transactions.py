@@ -29,6 +29,20 @@ class TransactionPrototype(models.Model):
     )
 
 
+class AccountTransaction(TransactionPrototype):
+    class Meta:
+        verbose_name = "Account Transaction"
+        verbose_name_plural = "Account Transactions"
+
+    account = models.ForeignKey(
+        'Account',
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        verbose_name="Account"
+    )
+
+
 class Transaction(TransactionPrototype):
     class Meta:
         verbose_name = "Transaction"
