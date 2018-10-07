@@ -66,17 +66,19 @@ def delete_transaction(request, mid, tid):
 def add_plus_transaction(request):
     if request.method == "POST":
         data = {}
-        data['account'] = Account.objects.get(pk=account_id)
+        account_id = request.POST.get('account_goal')
+        account_goal = Account.objects.get(pk=account_id)
+        data['account'] = account_goal
         data['date'] = request.POST.get('date')
         data['amount'] = request.POST.get('money')
         data['detail'] = request.POST.get('detail')
-        transaction = AccountTransaction(**new_data)
+        transaction = AccountTransaction(**data)
         transaction.save()
-        if account.money:
-            account.money += int(transaction.amount)
+        if account_goal.money:
+            account_goal.money += int(transaction.amount)
         else:
-            account.money = transaction.amount
-        account.save()
+            account_goal.money = transaction.amount
+        account_goal.save()
     messages.success(request, u"Гроші на рахунок успішно зараховано!")
     url = reverse("new_home") + "?list=accounts"
     return HttpResponseRedirect(url)
