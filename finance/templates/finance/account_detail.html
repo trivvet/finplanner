@@ -18,17 +18,42 @@
         <h2>Відомості по рахунку відсутні</h2>
         {% endif %}
 
+        {% if remnants %}
+        <hr />
+        <h3>Заблоковані кошти</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Місяць</th>
+                    <th>Сума коштів</th>
+                    <th>Залишок</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for remnant in remnants %}
+                <tr>
+                    <td>{{ remnant.month }}</td>
+                    <td>{{ remnant.amount }}</td>
+                    <td>{{ remnant.remainder }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
         {% if transactions %}
         <hr />
         <h3>Транзакції по рахунку</h3>
         <table class="table">
-            <tbody>
+            <thead>
                 <tr>
-                    <td>Дата</td>
-                    <td>Деталі</td>
-                    <td>Сума</td>
-                    <td>Дії</td>
+                    <th>Дата</th>
+                    <th>Деталі</th>
+                    <th>Сума</th>
+                    <th>Дії</th>
                 </tr>
+            </thead>
+            <tbody>
                 {% for transaction in transactions %}
                 <tr {% if transaction.amount < 0 %}class="text-danger"{% elif transaction.amount > 0 %}class="text-success"{% endif %} >
                     <td>{{ transaction.date }}</td>
