@@ -9,11 +9,6 @@ from django.urls import reverse
 
 from finance.models import Account, AccountTransaction, Score
 
-TYPE_OF_ACCOUNT = (
-    ('cash', u"Готівка"),
-    ('bank', u"Банк"),
-)
-
 def account_detail(request, aid):
     account = Account.objects.get(pk=aid)
     transactions = AccountTransaction.objects.filter(account=account)
@@ -47,4 +42,5 @@ def delete_account(request, aid):
 
 class AddAccount(forms.Form):
     name = forms.CharField(label=u"Назва рахунку", max_length=50)
-    kind = forms.ChoiceField(label=u"Вид рахунку", choices=TYPE_OF_ACCOUNT)
+    kind = forms.ChoiceField(label=u"Вид рахунку", 
+        choices=Account.TYPE_OF_ACCOUNT)

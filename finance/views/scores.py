@@ -10,11 +10,6 @@ from finance.models import Account, Month, Score
 
 # Create your views here.
 
-TYPE_OF_ACCOUNT = (
-    ('cash', u"Готівка"),
-    ('bank', u"Банк"),
-)
-
 def add_score(request, mid):
     if request.method == "POST":
         form = AddScore(request.POST)
