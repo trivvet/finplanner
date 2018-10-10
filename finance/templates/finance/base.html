@@ -12,9 +12,9 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'home' %}">Finplanner</a>
+        {% url "home" as url_home %} 
+        <a class="navbar-brand" href="{{ url_home }}">Finplanner</a>
         <div class="collapse navbar-collapse">
-            {% url "new_home" as url_home %} 
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == url_home %}active{% endif %}"

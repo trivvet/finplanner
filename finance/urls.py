@@ -4,8 +4,7 @@ from django.contrib import admin
 from finance import views
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
-    url(r'^new/$', views.new_home, name="new_home"),
+    url(r'^$', views.home, name="home"),
     
     # Month URLS
     url(r'^month/(?P<mid>[0-9]+)/$', views.show_month, 
@@ -43,5 +42,6 @@ urlpatterns = [
     url(r'^transation/add/$', views.add_plus_transaction, 
         name="add_plus_transaction"),
     url(r'^transation/(?P<tid>[0-9]+)/delete/$', 
-        views.delete_plus_transaction, name="delete_plus_transaction")
+        views.delete_plus_transaction, 
+        name="delete_plus_transaction")
 ]

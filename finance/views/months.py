@@ -11,25 +11,20 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.urls import reverse
 
-from finance.models import Account, Month, Score, PlannedExpense, Transaction, TransactionToAccount
+from finance.models import (
+    Account, 
+    Month, 
+    Score, 
+    PlannedExpense, 
+    Transaction, 
+    TransactionToAccount
+    )
 from accounts import AddAccount
 from .scores import AddScore
 from .expenses import AddExpense
 from .transactions import AddTransaction
 
 # Create your views here.
-
-def home(request):
-    content = {}
-    content['months'] = Month.objects.all()
-    content['accounts'] = Account.objects.all()
-    content['scores'] = Score.objects.all()
-    content['months_approved'] = content['months'].filter(approved=True)
-    content['months_disapproved'] = content['months'].exclude(approved=True)
-    form_account = AddAccount()
-    content['add_transactions'] = TransactionToAccount.objects.all()
-    return render(request, 'finance/home.html', 
-        {'content': content, 'form_account': form_account})
 
 def show_month(request, mid):
     month = Month.objects.get(pk=mid)
@@ -43,7 +38,7 @@ def show_month(request, mid):
         month.save()
         messages.success(request, 
             u"Бюджет на %s затверджено!" % month.name)
-        url = reverse("new_home") + "?list=budgets"
+        url = reverse("home") + "?list=budgets"
         return HttpResponseRedirect(url)
     else:
         return render(request, 'finance/month.html', 
@@ -78,11 +73,13 @@ def add_month(request):
         month['date'] = month_date
         month = Month(**month)
         month.save()
-        messages.success(request, u"Бюджет за {} успішно доданий!".format(month.name))
-    return HttpResponseRedirect(reverse("new_home"))
+        messages.success(request, 
+            u"Бюджет за {} успішно доданий!".format(month.name))
+    return HttpResponseRedirect(reverse("home"))
 
 def delete_month(request, mid):
     month = Month.objects.get(pk=mid)
     month.delete()
-    messages.success(request, u"Бюджет на %s успішно видалений!" % month.name)
-    return HttpResponseRedirect(reverse("new_home"))
+    messages.success(request, 
+        u"Бюджет на %s успішно видалений!" % month.name)
+    return HttpResponseRedirect(reverse("home"))

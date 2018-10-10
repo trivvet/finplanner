@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from finance.models import Month, Account, Score
 
-def new_home(request):
+def home(request):
     content = {}
     if request.GET.get('list', '') == 'budgets':
         content['months'] = Month.objects.exclude(approved=True)
@@ -17,4 +17,5 @@ def new_home(request):
         content['remnants'] = Score.objects.all()
     else:
         content['months'] = Month.objects.filter(approved=True)
-    return render(request, 'finance/new_home.html', {'content': content})
+    return render(request, 'finance/home.html', 
+        {'content': content})

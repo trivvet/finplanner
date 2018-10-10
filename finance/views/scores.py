@@ -36,8 +36,10 @@ def add_score(request, mid):
             else:
                 account.blocked = amount
             account.save()
-            messages.success(request, u"Надходження на %s успішно додане!" % score.account.name)
-    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
+            messages.success(request, 
+                u"Надходження на %s успішно додане!" % score.account.name)
+    return HttpResponseRedirect(reverse("show_month", 
+        kwargs={'mid': mid}))
 
 def delete_score(request, mid, sid):
     score = Score.objects.get(pk=sid)
@@ -48,8 +50,10 @@ def delete_score(request, mid, sid):
     account = score.account
     account.blocked -= score.amount
     account.save()
-    messages.success(request, u"Надходження на %s успішно видалене!" % score.account.name)
-    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
+    messages.success(request, 
+        u"Надходження на %s успішно видалене!" % score.account.name)
+    return HttpResponseRedirect(reverse("show_month", 
+        kwargs={'mid': mid}))
 
 class AddScore(forms.Form):
 

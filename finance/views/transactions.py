@@ -12,7 +12,15 @@ from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
 
-from finance.models import Account, Month, PlannedExpense, Transaction, Score, TransactionToAccount, AccountTransaction
+from finance.models import (
+    Account, 
+    Month, 
+    PlannedExpense, 
+    Transaction, 
+    Score, 
+    TransactionToAccount, 
+    AccountTransaction
+    )
 
 def add_transaction(request, mid):
     if request.method == "POST":
@@ -44,7 +52,8 @@ def add_transaction(request, mid):
                 change_accounts(transaction, planned_expense, month, 
                     score_source, True)
                 messages.success(request, u"Витрата успішно додана!")
-    return HttpResponseRedirect(reverse("show_balance", kwargs={'mid': mid}))
+    return HttpResponseRedirect(reverse("show_balance", 
+        kwargs={'mid': mid}))
 
 def delete_transaction(request, mid, tid):
     transaction = Transaction.objects.get(pk=tid)
@@ -61,7 +70,8 @@ def delete_transaction(request, mid, tid):
         score_goal.save()
         score_source.save()
     messages.success(request, u"Транзакція успішно видалена!")
-    return HttpResponseRedirect(reverse("show_balance", kwargs={'mid': mid}))
+    return HttpResponseRedirect(reverse("show_balance", 
+        kwargs={'mid': mid}))
 
 def add_plus_transaction(request):
     if request.method == "POST":
@@ -79,8 +89,9 @@ def add_plus_transaction(request):
         else:
             account_goal.money = transaction.amount
         account_goal.save()
-    messages.success(request, u"Гроші на рахунок успішно зараховано!")
-    url = reverse("new_home") + "?list=accounts"
+    messages.success(request, 
+        u"Гроші на рахунок успішно зараховано!")
+    url = reverse("home") + "?list=accounts"
     return HttpResponseRedirect(url)
 
 def delete_plus_transaction(request, tid):
@@ -93,10 +104,11 @@ def delete_plus_transaction(request, tid):
     messages.warning(request, 
         u"Транзакція по рахунку {} успішно видалена".format(
             transaction.account.name, transaction))
-    return HttpResponseRedirect(reverse("new_home"))
+    return HttpResponseRedirect(reverse("home"))
 
 class AddTransaction(forms.Form):
-    date = forms.DateField(label=u"Дата", initial=timezone.now().strftime("%Y-%m-%d"))
+    date = forms.DateField(label=u"Дата", 
+        initial=timezone.now().strftime("%Y-%m-%d"))
     amount = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': u"Сума"}))
     detail = forms.CharField(label=u"Деталі", required=False,
       widget=forms.TextInput(attrs={'placeholder': u"Деталі"}))

@@ -33,7 +33,7 @@ def add_account(request):
             account.save()
             messages.success(request, 
                 u"Рахунок %s успішно доданий" % account.name)
-    url = reverse("new_home") + "?list=accounts"
+    url = reverse("home") + "?list=accounts"
     return HttpResponseRedirect(url)
 
 def delete_account(request, aid):
@@ -42,7 +42,7 @@ def delete_account(request, aid):
         account.delete()
         messages.success(request, u"Рахунок %s (%s) успішно видалений" % 
             (account.name, account.kind))
-    url = reverse("new_home") + "?list=accounts"
+    url = reverse("home") + "?list=accounts"
     return HttpResponseRedirect(url)
 
 class AddAccount(forms.Form):

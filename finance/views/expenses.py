@@ -19,8 +19,10 @@ def add_planned_expense(request, mid):
             expense.save()
             month.expenses_plan += data['amount']
             month.save()
-            messages.success(request, u"Запланована витрата на %s успішно додана!" % expense.title)
-    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
+            messages.success(request, 
+                u"Запланована витрата на %s успішно додана!" % expense.title)
+    return HttpResponseRedirect(reverse("show_month", 
+        kwargs={'mid': mid}))
 
 def delete_planned_expense(request, mid, pid):
     planned_expense = PlannedExpense.objects.get(pk=pid)
@@ -28,10 +30,13 @@ def delete_planned_expense(request, mid, pid):
     month = Month.objects.get(pk=mid)
     month.expenses_plan -= planned_expense.amount
     month.save()
-    messages.success(request, u"Запланована витрата на %s успішно видалена!" % planned_expense.title)
-    return HttpResponseRedirect(reverse("show_month", kwargs={'mid': mid}))
+    messages.success(request, 
+        u"Запланована витрата на %s успішно видалена!" % planned_expense.title)
+    return HttpResponseRedirect(reverse("show_month", 
+        kwargs={'mid': mid}))
 
 class AddExpense(forms.Form):
-    title = forms.CharField(label=u"Назва запланованої витрати", max_length=256)
+    title = forms.CharField(label=u"Назва запланованої витрати", 
+        max_length=256)
     amount = forms.IntegerField(label=u"Розмір витрати", 
         widget=forms.NumberInput(attrs={'placeholder': u'Сума'}))

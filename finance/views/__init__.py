@@ -1,5 +1,5 @@
-from .finances import new_home
-from .months import home, add_month, show_month, show_balance, delete_month
+from .finances import home
+from .months import add_month, show_month, show_balance, delete_month
 from .accounts import add_account, delete_account, account_detail
 from .scores import add_score, delete_score
 from .expenses import add_planned_expense, delete_planned_expense
