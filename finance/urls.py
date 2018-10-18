@@ -22,6 +22,13 @@ urlpatterns = [
     url(r'^account/(?P<aid>[0-9]+)/detail/$',
         views.account_detail, name="account_detail"),
 
+    # Saving URLS
+    url(r'^saving/$', views.savings_list, name="savings_list"),
+    url(r'^saving/total/add/$', views.saving_total_add, 
+        name="saving_total_add"),
+    url(r'^saving/add/$', views.saving_add, 
+        name="saving_add"),
+
     # Score URLS
     url(r'^month/(?P<mid>[0-9]+)/score/add/$', views.add_score, 
         name="add_score"),

@@ -12,13 +12,18 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        {% url "home" as url_home %} 
+        {% url "home" as url_home %}
+        {% url "savings_list" as savings_list %} 
         <a class="navbar-brand" href="{{ url_home }}">Finplanner</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == url_home %}active{% endif %}"
                         href="{{ url_home }}">Стартова сторінка</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == savings_list %}active{% endif %}"
+                        href="{{ savings_list }}">Збереження</a>
                 </li>
             </ul>
         </div>

@@ -1,0 +1,92 @@
+{% extends "finance/base.html" %}
+
+{% block header %}
+<div class="row">
+    <div class="col-12 text-center mt-3" id="page-header">
+        <h1>Збереження</h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        {% if savings %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Цільове використання</th>
+                    <th>Загальна сума</th>
+                    {% for account in accounts %}
+                    <th>
+                        {{ account.name }}</br>
+                        {{ account.kind }}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for saving in savings %}
+                <tr>
+                    <th>{{ saving.title }}</th>
+                    <td>{{ saving.total_amount }}</td>
+                    {% for account in accounts %}
+                    <td>
+                        {% if account.savings %}
+                            {% for save in account.savings %} 
+                                {% if save.saving_total.id == saving.id %}
+                                {{ save.amount }}
+                                {% else %}
+                                0
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        0
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        Збереження ще не додані
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col-12">
+        <form action="{% url 'saving_total_add' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="title">
+            <button type="submit" value="add"
+                class="btn btn-sm btn-success">Додати</button>
+        </form>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col-12">
+        <form action="{% url 'saving_add' %}" method="POST">
+            {% csrf_token %}
+            <select name="saving_total">
+                <option value="">---</option>
+                {% for saving in savings %}
+                <option value="{{ saving.id }}">{{ saving.title }}</option>
+                {% endfor %}
+            </select>
+            <select name="account">
+                <option value="">---</option>
+                {% for account in accounts %}
+                <option value="{{ account.id }}">{{ account.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="amount" />
+            <button type="submit" value="add"
+                class="btn btn-sm btn-success">Додати</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
