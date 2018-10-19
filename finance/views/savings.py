@@ -17,8 +17,6 @@ def savings_list(request):
     savings_total = SavingTotal.objects.all()
     accounts = Account.objects.all()
     savings = Saving.objects.all()
-    for account in accounts:
-        account.savings = savings.filter(account=account)
     return render(request, 'finance/savings.html', 
         {'savings': savings_total, 'accounts': accounts, 
         'savings_p': savings})
@@ -26,10 +24,10 @@ def savings_list(request):
 def saving_total_add(request):
     if request.method == "POST":
         title = request.POST.get("title", "")
-        saving = SavingTotal(title=title, total_amount=0)
+        saving = SavingTotal(title=title)
         saving.save()
         messages.success(request, 
-            u"Цільове збережння {} успішно додане").format(saving.title)       
+            u"Цільове збережння {} успішно додане".format(saving.title))       
     return HttpResponseRedirect(reverse("savings_list"))
 
 
@@ -52,9 +50,6 @@ def saving_add(request):
         else:
             saving_exist.amount += int(amount)
             saving_exist.save()
-
-        saving_total.total_amount += int(amount)
-        saving_total.save()
 
         messages.success(request,
             u"Гроші у сумі {} на {} успішно додано".format(

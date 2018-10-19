@@ -13,7 +13,7 @@
     <div class="col-12">
         {% if savings %}
         <table class="table table-bordered">
-            <thead>
+            <thead class="thead-light">
                 <tr>
                     <th>Цільове використання</th>
                     <th>Загальна сума</th>
@@ -29,13 +29,13 @@
                 {% for saving in savings %}
                 <tr>
                     <th>{{ saving.title }}</th>
-                    <td>{{ saving.total_amount }}</td>
+                    <td>{{ saving.get_total_amount }}</td>
                     {% for account in accounts %}
                     <td>
-                        {% if account.savings %}
-                            {% for save in account.savings %} 
+                        {% if account.get_savings %}
+                            {% for save in account.get_savings %} 
                                 {% if save.saving_total.id == saving.id %}
-                                {{ save.amount }}
+                                {{ save.amount }}   
                                 {% endif %}
                             {% endfor %}
                         {% else %}
@@ -45,6 +45,20 @@
                     {% endfor %}
                 </tr>
                 {% endfor %}
+                <tr>
+                    <th>Всього по рахунку</th>
+                    <td></td>
+                    {% for account in accounts %}
+                    <th>{{ account.get_total_saving_amount }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td>Невикористані залишки</td>
+                    <td></td>
+                    {% for account in accounts %}
+                    <td>{{ account.get_saving_remainder }}</td>
+                    {% endfor %}
+                </tr>
             </tbody>
         </table>
         {% else %}

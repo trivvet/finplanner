@@ -18,22 +18,15 @@ class SavingTotal(models.Model):
         verbose_name="Title"
     )
 
-    total_amount = models.IntegerField(
-        blank=False,
-        null=False,
-        default=0,
-        verbose_name="Total amount of money"
-    )
-
     def __unicode__(self):
         return u"Загальні збереження по позиції {}".format(self.title)
 
-    # get_total_amount(self):
-    #     savings = Saving.objects.filter(saving_total=self)
-    #     total = 0
-    #     for saving in savings:
-    #         total += saving.amount
-    #     return total
+    def get_total_amount(self):
+        savings = Saving.objects.filter(saving_total=self)
+        total = 0
+        for saving in savings:
+            total += saving.amount
+        return total
 
 class Saving(models.Model):
     class Meta:

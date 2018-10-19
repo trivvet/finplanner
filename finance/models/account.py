@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+from .saving import Saving
+
 # Create your models here.
 
 class Account(models.Model):
@@ -51,4 +53,18 @@ class Account(models.Model):
         else:
             answer = "{} ({})".format(self.name, self.money)
         return answer
+
+    def get_savings(self):
+        return Saving.objects.filter(account=self)
+
+    def get_total_saving_amount(self):
+        savings = self.get_savings()
+        total = 0
+        for saving in savings:
+            total += saving.amount
+        return total
+
+    def get_saving_remainder(self):
+        return self.money - self.get_total_saving_amount()
+
 
