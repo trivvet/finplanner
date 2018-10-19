@@ -19,13 +19,21 @@ class SavingTotal(models.Model):
     )
 
     total_amount = models.IntegerField(
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
+        default=0,
         verbose_name="Total amount of money"
     )
 
     def __unicode__(self):
-        return u"Загальні збереження по позиції %".format(self.title)
+        return u"Загальні збереження по позиції {}".format(self.title)
+
+    # get_total_amount(self):
+    #     savings = Saving.objects.filter(saving_total=self)
+    #     total = 0
+    #     for saving in savings:
+    #         total += saving.amount
+    #     return total
 
 class Saving(models.Model):
     class Meta:
@@ -55,6 +63,6 @@ class Saving(models.Model):
     )
 
     def __unicode__(self):
-        return u"Збереження по позиції % на рахунку %".format(
+        return u"Збереження по позиції {} на рахунку {}".format(
             self.saving_total.title, self.account.name)
 

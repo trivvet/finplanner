@@ -36,8 +36,6 @@
                             {% for save in account.savings %} 
                                 {% if save.saving_total.id == saving.id %}
                                 {{ save.amount }}
-                                {% else %}
-                                0
                                 {% endif %}
                             {% endfor %}
                         {% else %}
@@ -89,4 +87,14 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-12">
+        {% for saving in savings_p %}
+        <p>
+            {{ saving }}<a class="btn btn-sm btn-danger"
+            href="{% url 'saving_delete' saving.id %}">Видалити</a>
+        </p>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
