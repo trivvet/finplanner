@@ -18,7 +18,6 @@ from .savings import (
     savings_list,
     saving_total_add,
     saving_add,
-    saving_delete,
     saving_total_delete
     )
 from .scores import add_score, delete_score

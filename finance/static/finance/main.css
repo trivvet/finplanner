@@ -34,10 +34,6 @@
     display: none;
 }
 
-.addMoney {
-    display: none;
-}
-
 .addTransaction {
     display: none;
 }
@@ -62,4 +58,9 @@
 
 .list-group-item {
     background-color: inherit;
+}
+
+/* savings page */
+.addMoney, .saving-delete {
+    display: none;
 }

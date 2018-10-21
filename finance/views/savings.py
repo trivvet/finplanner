@@ -17,9 +17,12 @@ def savings_list(request):
     savings_total = SavingTotal.objects.all()
     accounts = Account.objects.all()
     savings = Saving.objects.all()
+    total = 0
+    for account in accounts:
+        total += account.get_total_saving_amount()
     return render(request, 'finance/savings.html', 
         {'savings': savings_total, 'accounts': accounts, 
-        'savings_p': savings})
+        'savings_p': savings, 'total_saving': total})
 
 def saving_total_add(request):
     if request.method == "POST":
@@ -38,44 +41,21 @@ def saving_total_add(request):
     return HttpResponseRedirect(reverse("savings_list"))
 
 
-def saving_add(request):
+def saving_add(request, sid):
     if request.method == "POST":
-        data = {}
-        saving_total_id = request.POST.get("saving_total", "")
-        saving_total = SavingTotal.objects.get(pk=saving_total_id)
-        data["saving_total"] = saving_total
-        account = request.POST.get("account", "")
-        data["account"] = Account.objects.get(pk=account)
+        saving = Saving.objects.get(pk=sid)
         amount = request.POST.get("amount", 0)
-        try:
-            saving_exist = Saving.objects.get(
-                saving_total=data['saving_total'], account=data['account'])
-        except ObjectDoesNotExist:
-            data['amount'] = amount
-            new_saving = Saving(**data)
-            new_saving.save()
-        else:
-            saving_exist.amount += int(amount)
-            saving_exist.save()
+        saving.amount += int(amount)
+        saving.save()
 
         messages.success(request,
             u"Гроші у сумі {} на {} успішно додано".format(
-                amount, saving_total.title
+                amount, saving.saving_total.title
                 ))
         return HttpResponseRedirect(reverse("savings_list"))
 
-def saving_delete(request, sid):
-    saving = Saving.objects.get(pk=sid)
-    saving.delete()
-    messages.warning(request, u"Збереження успішно видалене")
-    return HttpResponseRedirect(reverse("savings_list"))
-
 def saving_total_delete(request, tid):
     saving_total = SavingTotal.objects.get(pk=tid)
-    # savings = Saving.objects.filter(saving_total=saving_total)
-    # if savings.exists():
-    #     for saving in savings:
-    #         saving.delete()
     saving_total.delete()
     messages.warning(request, u"Збереження успішно видалене")
     return HttpResponseRedirect(reverse("savings_list"))

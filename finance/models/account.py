@@ -25,9 +25,10 @@ class Account(models.Model):
     )
 
     money = models.IntegerField(
-        blank=True,
-        null=True,
-        verbose_name="Amount of Money"
+        blank=False,
+        null=False,
+        verbose_name="Amount of Money",
+        default=0
     )
 
     blocked = models.IntegerField(

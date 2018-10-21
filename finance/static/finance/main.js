@@ -9,14 +9,6 @@ function expenseAddButton() {
     );
 }
 
-function showAddMoney() {
-    $('#saving-table td').hover(
-        function() {
-            $(this).find('.addMoney').toggle();
-        }
-    );
-}
-
 function transactionAddButton() {
     $('#balance .list-group-item').hover(
         function() {
@@ -68,6 +60,22 @@ function addMonthesCalendar() {
     });
 }
 
+function showAddMoney() {
+    $('#saving-table td').hover(
+        function() {
+            $(this).find('.addMoney').toggle();
+        }
+    );
+}
+
+function showSavingDeleteButton() {
+    $('#saving-table tr').hover(
+        function() {
+            $(this).find('.saving-delete').toggle();
+        }
+    );
+}
+
 $(document).ready(function() {
     expenseAddButton();
     transactionAddButton();
@@ -75,4 +83,5 @@ $(document).ready(function() {
     addMonthesCalendar();
     addMoneyCalendar();
     showAddMoney();
+    showSavingDeleteButton();
 });

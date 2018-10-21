@@ -25,15 +25,17 @@
 <div class="row">
     <div class="col-12">
         {% if savings %}
-        <table class="table table-bordered" id="saving-table">
+        <table class="table table-bordered table-hover" id="saving-table">
             <thead class="thead-light">
                 <tr>
                     <th>Цільове використання</th>
-                    <th>Загальна сума</th>
+                    <th class="text-center">Загальна сума</th>
                     {% for account in accounts %}
-                    <th>
+                    <th class="text-center">
                         {{ account.name }}</br>
-                        {{ account.kind }}
+                        {% for key, value in account.TYPE_OF_ACCOUNT %}
+                        {% if account.kind == key %}{{ value }}{% endif %}
+                        {% endfor %}
                     </th>
                     {% endfor %}
                 </tr>
@@ -41,11 +43,11 @@
             <tbody>
                 {% for saving in savings %}
                 <tr>
-                    <th>{{ saving.title }} <a class="btn btn-sm btn-outline-danger"
+                    <th>{{ saving.title }} <a class="btn btn-sm btn-outline-danger saving-delete"
             href="{% url 'saving_total_delete' saving.id %}">X</a></th>
-                    <td>{{ saving.get_total_amount }}</td>
+                    <td class="text-center">{{ saving.get_total_amount }}</td>
                     {% for account in accounts %}
-                    <td>
+                    <td class="text-center">
                         {% if account.get_savings %}
                             {% for save in account.get_savings %} 
                                 {% if save.saving_total.id == saving.id %}
@@ -61,25 +63,22 @@
                     {% endfor %}
                 </tr>
                 {% endfor %}
-                <tr>
-                    <th>Всього по рахунку</th>
-                    <td></td>
+                <tr class="table-success">
+                    <th colspan="2">Всього збережень на рахунку</th>
                     {% for account in accounts %}
-                    <th>{{ account.get_total_saving_amount }}</th>
+                    <th class="text-center">{{ account.get_total_saving_amount }}</th>
                     {% endfor %}
                 </tr>
                 <tr>
-                    <td>Заблоковані кошти</td>
-                    <td></td>
+                    <td colspan="2">Заблоковані кошти</td>
                     {% for account in accounts %}
-                    <td>{% if account.blocked %}{{ account.blocked }}{% else %}0{% endif %}</td>
+                    <td class="text-center">{% if account.blocked %}{{ account.blocked }}{% else %}0{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
-                    <td>Невикористані залишки</td>
-                    <td></td>
+                    <td colspan="2">Невикористані залишки</td>
                     {% for account in accounts %}
-                    <td>{{ account.get_saving_remainder }}</td>
+                    <td class="{% if account.get_saving_remainder < 0 %}bg-danger{% endif %} text-center">{{ account.get_saving_remainder }}</td>
                     {% endfor %}
                 </tr>
             </tbody>
@@ -90,10 +89,16 @@
     </div>
 </div>
 
+<div class="row mt-2">
+    <div class="col-12">
+        <h2>Всього збережень на рахунках - {{ total_saving }}</h2>
+    </div>
+</div>
+
 {% for save in savings_p %}
 <div class="row mt-2 collapse" id="collapseAddMoney{{ save.id }}">
     <div class="col-12">
-        <form action="{% url 'saving_add' %}" method="POST">
+        <form action="{% url 'saving_add' save.id %}" method="POST">
             {% csrf_token %}
             Додати гроші до збереження {{ save.saving_total.title }} на рахунок {{ save.account.name }}
             <input type="hidden" name="saving_total" value="{{ save.saving_total.id }}">
@@ -101,8 +106,6 @@
             <input type="number" name="amount" />
             <button type="submit" value="add"
                 class="btn btn-sm btn-success">Додати</button>
-            <a class="btn btn-sm btn-danger"
-            href="{% url 'saving_delete' save.id %}">Видалити збереження</a>
         </form>
     </div>
 </div>

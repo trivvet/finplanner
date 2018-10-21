@@ -7,7 +7,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from finance.models import Account, AccountTransaction, Score
+from finance.models import (
+    Account, 
+    AccountTransaction, 
+    Score, 
+    SavingTotal,
+    Saving
+    )
 
 def account_detail(request, aid):
     account = Account.objects.get(pk=aid)
@@ -26,6 +32,13 @@ def add_account(request):
             data['kind'] = form.cleaned_data['kind']
             account = Account(**data)
             account.save()
+            savings = SavingTotal.objects.all()
+            for saving in savings:
+                data = {}
+                data['saving_total'] = saving
+                data['account'] = account
+                new_saving = Saving(**data)
+                new_saving.save()
             messages.success(request, 
                 u"Рахунок %s успішно доданий" % account.name)
     url = reverse("home") + "?list=accounts"

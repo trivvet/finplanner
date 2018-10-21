@@ -26,10 +26,8 @@ urlpatterns = [
     url(r'^saving/$', views.savings_list, name="savings_list"),
     url(r'^saving/total/add/$', views.saving_total_add, 
         name="saving_total_add"),
-    url(r'^saving/add/$', views.saving_add, 
+    url(r'^saving/(?P<sid>[0-9]+)/add/$', views.saving_add, 
         name="saving_add"),
-    url(r'^saving/(?P<sid>[0-9]+)/delete/$', views.saving_delete,
-        name="saving_delete"),
     url(r'^saving/total/(?P<tid>[0-9]+)/delete/$', views.saving_total_delete,
         name="saving_total_delete"),
 
