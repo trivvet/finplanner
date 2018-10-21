@@ -28,6 +28,9 @@ class SavingTotal(models.Model):
             total += saving.amount
         return total
 
+    def get_savings(self):
+        return Saving.objects.filter(saving_total=self)
+
 class Saving(models.Model):
     class Meta:
         verbose_name = "Saving"
@@ -52,7 +55,8 @@ class Saving(models.Model):
     amount = models.IntegerField(
         blank=False,
         null=False,
-        verbose_name="Money Amount"
+        verbose_name="Money Amount",
+        default=0
     )
 
     def __unicode__(self):

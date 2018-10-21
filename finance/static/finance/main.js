@@ -9,6 +9,14 @@ function expenseAddButton() {
     );
 }
 
+function showAddMoney() {
+    $('#saving-table td').hover(
+        function() {
+            $(this).find('.addMoney').toggle();
+        }
+    );
+}
+
 function transactionAddButton() {
     $('#balance .list-group-item').hover(
         function() {
@@ -66,4 +74,5 @@ $(document).ready(function() {
     addExpenseCalendar();
     addMonthesCalendar();
     addMoneyCalendar();
+    showAddMoney();
 });

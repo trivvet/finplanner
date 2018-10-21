@@ -9,10 +9,23 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="row mb-2">
+    <div class="col-12">
+        <form action="{% url 'saving_total_add' %}" method="POST">
+            {% csrf_token %}
+            Додати збереження: 
+            <input type="text" name="title">
+            <button type="submit" value="add"
+                class="btn btn-sm btn-success">Додати</button>
+        </form>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-12">
         {% if savings %}
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="saving-table">
             <thead class="thead-light">
                 <tr>
                     <th>Цільове використання</th>
@@ -28,14 +41,17 @@
             <tbody>
                 {% for saving in savings %}
                 <tr>
-                    <th>{{ saving.title }}</th>
+                    <th>{{ saving.title }} <a class="btn btn-sm btn-outline-danger"
+            href="{% url 'saving_total_delete' saving.id %}">X</a></th>
                     <td>{{ saving.get_total_amount }}</td>
                     {% for account in accounts %}
                     <td>
                         {% if account.get_savings %}
                             {% for save in account.get_savings %} 
                                 {% if save.saving_total.id == saving.id %}
-                                {{ save.amount }}   
+                                {{ save.amount }} 
+                                <a class="btn btn-outline-success btn-sm addMoney"data-toggle="collapse"
+                            href="#collapseAddMoney{{ save.id }}" role="button" aria-expanded="false" aria-controls="collapseAddMoney{{ save.id }}">Додати</a>  
                                 {% endif %}
                             {% endfor %}
                         {% else %}
@@ -53,6 +69,13 @@
                     {% endfor %}
                 </tr>
                 <tr>
+                    <td>Заблоковані кошти</td>
+                    <td></td>
+                    {% for account in accounts %}
+                    <td>{% if account.blocked %}{{ account.blocked }}{% else %}0{% endif %}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
                     <td>Невикористані залишки</td>
                     <td></td>
                     {% for account in accounts %}
@@ -67,48 +90,22 @@
     </div>
 </div>
 
-<div class="row mt-2">
-    <div class="col-12">
-        <form action="{% url 'saving_total_add' %}" method="POST">
-            {% csrf_token %}
-            <input type="text" name="title">
-            <button type="submit" value="add"
-                class="btn btn-sm btn-success">Додати</button>
-        </form>
-    </div>
-</div>
-
-<div class="row mt-2">
+{% for save in savings_p %}
+<div class="row mt-2 collapse" id="collapseAddMoney{{ save.id }}">
     <div class="col-12">
         <form action="{% url 'saving_add' %}" method="POST">
             {% csrf_token %}
-            <select name="saving_total">
-                <option value="">---</option>
-                {% for saving in savings %}
-                <option value="{{ saving.id }}">{{ saving.title }}</option>
-                {% endfor %}
-            </select>
-            <select name="account">
-                <option value="">---</option>
-                {% for account in accounts %}
-                <option value="{{ account.id }}">{{ account.name }}</option>
-                {% endfor %}
-            </select>
+            Додати гроші до збереження {{ save.saving_total.title }} на рахунок {{ save.account.name }}
+            <input type="hidden" name="saving_total" value="{{ save.saving_total.id }}">
+            <input type="hidden" name="account" value="{{ save.account.id }}">
             <input type="number" name="amount" />
             <button type="submit" value="add"
                 class="btn btn-sm btn-success">Додати</button>
+            <a class="btn btn-sm btn-danger"
+            href="{% url 'saving_delete' save.id %}">Видалити збереження</a>
         </form>
     </div>
 </div>
+{% endfor %}
 
-<div class="row">
-    <div class="col-12">
-        {% for saving in savings_p %}
-        <p>
-            {{ saving }}<a class="btn btn-sm btn-danger"
-            href="{% url 'saving_delete' saving.id %}">Видалити</a>
-        </p>
-        {% endfor %}
-    </div>
-</div>
 {% endblock %}

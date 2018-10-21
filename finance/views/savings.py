@@ -26,6 +26,13 @@ def saving_total_add(request):
         title = request.POST.get("title", "")
         saving = SavingTotal(title=title)
         saving.save()
+        accounts = Account.objects.all()
+        for account in accounts:
+            data = {}
+            data["saving_total"] = saving
+            data["account"] = account
+            saving_account = Saving(**data)
+            saving_account.save()
         messages.success(request, 
             u"Цільове збережння {} успішно додане".format(saving.title))       
     return HttpResponseRedirect(reverse("savings_list"))
@@ -60,5 +67,15 @@ def saving_add(request):
 def saving_delete(request, sid):
     saving = Saving.objects.get(pk=sid)
     saving.delete()
+    messages.warning(request, u"Збереження успішно видалене")
+    return HttpResponseRedirect(reverse("savings_list"))
+
+def saving_total_delete(request, tid):
+    saving_total = SavingTotal.objects.get(pk=tid)
+    # savings = Saving.objects.filter(saving_total=saving_total)
+    # if savings.exists():
+    #     for saving in savings:
+    #         saving.delete()
+    saving_total.delete()
     messages.warning(request, u"Збереження успішно видалене")
     return HttpResponseRedirect(reverse("savings_list"))

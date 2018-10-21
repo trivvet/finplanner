@@ -65,6 +65,9 @@ class Account(models.Model):
         return total
 
     def get_saving_remainder(self):
-        return self.money - self.get_total_saving_amount()
+        if self.blocked:
+            return self.money - self.blocked - self.get_total_saving_amount()
+        else:
+            return self.money - self.get_total_saving_amount()
 
 

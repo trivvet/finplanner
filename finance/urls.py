@@ -30,6 +30,8 @@ urlpatterns = [
         name="saving_add"),
     url(r'^saving/(?P<sid>[0-9]+)/delete/$', views.saving_delete,
         name="saving_delete"),
+    url(r'^saving/total/(?P<tid>[0-9]+)/delete/$', views.saving_total_delete,
+        name="saving_total_delete"),
 
     # Score URLS
     url(r'^month/(?P<mid>[0-9]+)/score/add/$', views.add_score, 
