@@ -41,18 +41,27 @@ def saving_total_add(request):
     return HttpResponseRedirect(reverse("savings_list"))
 
 
-def saving_add(request, sid):
-    if request.method == "POST":
-        saving = Saving.objects.get(pk=sid)
-        amount = request.POST.get("amount", 0)
-        saving.amount += int(amount)
-        saving.save()
+# def saving_add(request, sid):
+#     if request.method == "POST":
+#         saving = Saving.objects.get(pk=sid)
+#         amount = request.POST.get("amount", 0)
+#         saving.amount += int(amount)
+#         saving.save()
 
-        messages.success(request,
-            u"Гроші у сумі {} на {} успішно додано".format(
-                amount, saving.saving_total.title
-                ))
-        return HttpResponseRedirect(reverse("savings_list"))
+#         messages.success(request,
+#             u"Гроші у сумі {} на {} успішно додано".format(
+#                 amount, saving.saving_total.title
+#                 ))
+#         return HttpResponseRedirect(reverse("savings_list"))
+
+def saving_transfer(request, sid, action):
+    if request.method == "POST":
+        saving_from = Saving.objects.get(pk=request.POST.get('from', ''))
+        saving_to = Saving.objects.get(pk=request.POST.get('goal', ''))
+        amount = request.POST.get('amount', '')
+    elif request.method == "GET":
+        saving = Saving.objects.get(pk=sid)
+        return render(request, 'finance/saving_change.html', {})
 
 def saving_total_delete(request, tid):
     saving_total = SavingTotal.objects.get(pk=tid)

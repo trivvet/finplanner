@@ -52,8 +52,8 @@
                             {% for save in account.get_savings %} 
                                 {% if save.saving_total.id == saving.id %}
                                 {{ save.amount }} 
-                                <a class="btn btn-outline-success btn-sm addMoney"data-toggle="collapse"
-                            href="#collapseAddMoney{{ save.id }}" role="button" aria-expanded="false" aria-controls="collapseAddMoney{{ save.id }}">Додати</a>  
+                                <a class="btn btn-outline-info btn-sm addMoney"data-toggle="collapse"
+                            href="#collapseMoneyTransfer{{ save.id }}" role="button" aria-expanded="false" aria-controls="collapseMoneyTransfer{{ save.id }}">Змінити</a> 
                                 {% endif %}
                             {% endfor %}
                         {% else %}
@@ -96,17 +96,11 @@
 </div>
 
 {% for save in savings_p %}
-<div class="row mt-2 collapse" id="collapseAddMoney{{ save.id }}">
+<div class="row mt-2 collapse" id="collapseMoneyTransfer{{ save.id }}">
     <div class="col-12">
-        <form action="{% url 'saving_add' save.id %}" method="POST">
-            {% csrf_token %}
-            Додати гроші до збереження {{ save.saving_total.title }} на рахунок {{ save.account.name }}
-            <input type="hidden" name="saving_total" value="{{ save.saving_total.id }}">
-            <input type="hidden" name="account" value="{{ save.account.id }}">
-            <input type="number" name="amount" />
-            <button type="submit" value="add"
-                class="btn btn-sm btn-success">Додати</button>
-        </form>
+        <a class="btn btn-outline-success btn-sm" href="{% url 'saving_transfer' save.id 'add' %}">Зарахувати кошти</a>
+        <a class="btn btn-outline-warning btn-sm" href="{% url 'saving_transfer' save.id 'remove' %}">Зняти кошти</a>
+        <a class="btn btn-outline-info btn-sm" href="{% url 'saving_transfer' save.id 'trans' %}">Перенести кошти</a>
     </div>
 </div>
 {% endfor %}

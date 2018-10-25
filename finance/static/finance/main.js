@@ -76,6 +76,12 @@ function showSavingDeleteButton() {
     );
 }
 
+function changeSavingTransactionForm(){
+    $('.addMoney').on("click", function() {
+        $('#saving_name').text($(this).siblings('.saving_name').text());
+    });
+}
+
 $(document).ready(function() {
     expenseAddButton();
     transactionAddButton();
@@ -84,4 +90,5 @@ $(document).ready(function() {
     addMoneyCalendar();
     showAddMoney();
     showSavingDeleteButton();
+    changeSavingTransactionForm();
 });

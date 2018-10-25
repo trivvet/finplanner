@@ -4,6 +4,9 @@ from __future__ import unicode_literals
 from django.db import models
 from datetime import datetime
 
+from .account import Account
+from .saving import Saving
+
 class TransactionPrototype(models.Model):
 
     class Meta:
@@ -42,58 +45,6 @@ class AccountTransaction(TransactionPrototype):
         verbose_name="Account"
     )
 
-
-class Transaction(TransactionPrototype):
-    class Meta:
-        verbose_name = "Transaction"
-        verbose_name_plural = "Transactions"
-    
-    month = models.ForeignKey(
-        'Month',
-        on_delete=models.CASCADE,
-        blank=False,
-        null=False,
-        verbose_name="Month"
-    )
-
-    score_source = models.ForeignKey(
-        'Score',
-        on_delete=models.CASCADE,
-        blank=False,
-        null=False,
-        verbose_name="Transaction Source"
-    )
-
-    score_goal = models.CharField(
-        max_length=256,
-        blank=True,
-        null=True,
-        verbose_name="Transaction Goal Id"
-    )
-
-    score_goal_name = models.CharField(
-        max_length=256,
-        blank=True,
-        null=True,
-        verbose_name="Transaction Goal Name"
-    )
-
-    planned_expense = models.ForeignKey(
-        'PlannedExpense',
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-        verbose_name="Planned Expense"
-    )
-
-    def __unicode__(self):
-        if self.planned_expense:
-            return u"Витрати на %s" % (self.planned_expense.title)
-        elif self.score_goal_name:
-            return u"Переказ з рахунку %s на рахунок %s" % (self.score_source.account.name, self.score_goal_name)
-        elif self.score_goal:
-            return u"Переказ з рахунку %s на інший рахунок" % (self.score_source.account.name)
-
 class TransactionToAccount(TransactionPrototype):
     class Meta:
         verbose_name = u"Plus-Transaction"
@@ -107,5 +58,70 @@ class TransactionToAccount(TransactionPrototype):
         verbose_name="Transaction Source"
     )
 
+    transaction = models.ForeignKey(
+        'Transaction',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name="Transaction"
+    )
+
     def __unicode__(self):
         return u"Додавання коштів на рахунок {}".format(self.account_goal.name)
+
+class SavingTransaction(TransactionPrototype):
+    class Meta:
+        verbose_name = u"Saving Transaction"
+        verbose_name_plural = u"Saving Transactions"
+
+    saving = models.ForeignKey(
+        'Saving',
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        verbose_name="Saving"
+    )
+
+    transaction = models.ForeignKey(
+        'Transaction',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name="Transaction"
+    )
+
+class Transaction(TransactionPrototype):
+    class Meta:
+        verbose_name = u"Transaction"
+        verbose_name_plural = u"Transactions"
+
+    model = models.CharField(
+        max_length=256,
+        blank=False,
+        null=False,
+        verbose_name="Model"
+    )
+
+    date = models.DateTimeField(
+        default=datetime.now,
+        blank=False,
+        null=False,
+        verbose_name="Transaction Time"
+    )
+
+    def __unicode__(self):
+        if model == "Account":
+            return u"Транзакція по рахунках від {}".format(self.date.date())
+        elif model == "Saving":
+            return u"Транзакція по збереженнях від {}".format(self.date.date())
+
+    def get_elements(self):
+        if model == "Account":
+            return AccountTransaction.objects.filter(transaction=self)
+        elif model == "Saving":
+            return SavingTransaction.objects.filter(transaction=self)
+
+
+
+
+

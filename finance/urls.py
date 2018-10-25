@@ -26,10 +26,12 @@ urlpatterns = [
     url(r'^saving/$', views.savings_list, name="savings_list"),
     url(r'^saving/total/add/$', views.saving_total_add, 
         name="saving_total_add"),
-    url(r'^saving/(?P<sid>[0-9]+)/add/$', views.saving_add, 
-        name="saving_add"),
+    # url(r'^saving/(?P<sid>[0-9]+)/add/$', views.saving_add, 
+    #     name="saving_add"),
     url(r'^saving/total/(?P<tid>[0-9]+)/delete/$', views.saving_total_delete,
         name="saving_total_delete"),
+    url(r'^saving/transfer/(?P<sid>[0-9]+)/(?P<action>[a-z]+)/$', 
+        views.saving_transfer, name="saving_transfer"),
 
     # Score URLS
     url(r'^month/(?P<mid>[0-9]+)/score/add/$', views.add_score, 
