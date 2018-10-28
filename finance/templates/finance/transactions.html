@@ -1,0 +1,38 @@
+{% extends "finance/base.html" %}
+
+{% block header %}
+<div class="row">
+    <div class="col-12 text-center mt-3" id="page-header">
+        <h1>Транзакції</h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="row mb-2">
+    <div class="col-12">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Тип транзакції</th>
+                    <th>Деталі</th>
+                    <th>Рух коштів</th>
+                    <th>Дата та час</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction }}</td>
+                    <td>{{ transaction.detail }}</td>
+                    <td class="{% if transaction.amount > 0 %}bg-success{% else %}bg-danger{% endif %}">{{ transaction.amount }}</td>
+                    <td>{{ transaction.date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

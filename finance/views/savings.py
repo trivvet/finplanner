@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from datetime import datetime
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,7 +11,8 @@ from django.urls import reverse
 from finance.models import (
     SavingTotal, 
     Saving,
-    Account
+    Account,
+    Transaction
     )
 
 def savings_list(request):
@@ -55,13 +57,37 @@ def saving_total_add(request):
 #         return HttpResponseRedirect(reverse("savings_list"))
 
 def saving_transfer(request, sid, action):
+    saving = Saving.objects.get(pk=sid)
     if request.method == "POST":
-        saving_from = Saving.objects.get(pk=request.POST.get('from', ''))
-        saving_to = Saving.objects.get(pk=request.POST.get('goal', ''))
         amount = request.POST.get('amount', '')
+        transaction_data = {}
+        if action == 'add':
+            saving.amount += int(amount)
+            transaction_data['amount'] = int(amount)
+            transaction_data['detail'] = u"Зарахування коштів на збереження {} по рахунку {}".format(
+                saving.saving_total.title, saving.account.name)
+        elif action == 'remove':
+            saving.amount -= int(amount)
+            transaction_data['amount'] = - int(amount)
+            transaction_data['detail'] = u"Зняття коштів зі збереження {} по рахунку {}".format(
+                saving.saving_total.title, saving.account.name)
+        saving.save()
+        transaction_data['model'] = saving.__class__.__name__
+        transaction_data['model_id'] = saving.id
+        transaction = Transaction(**transaction_data)
+        transaction.save()
+        if action == 'add':
+            messages.success(request,
+                u"Кошти на {} на рахунок {} успішно зараховано".format(
+                    saving.saving_total.title, saving.account.name))
+        if action == 'remove':
+            messages.error(request,
+                u"Кошти зі збереження {} на рахунку {} успішно знято".format(
+                    saving.saving_total.title, saving.account.name))
+        return HttpResponseRedirect(reverse("savings_list"))
     elif request.method == "GET":
-        saving = Saving.objects.get(pk=sid)
-        return render(request, 'finance/saving_change.html', {})
+        return render(request, 'finance/saving_change.html', 
+            {'action': action, 'saving': saving})
 
 def saving_total_delete(request, tid):
     saving_total = SavingTotal.objects.get(pk=tid)

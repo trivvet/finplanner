@@ -3,15 +3,28 @@
 {% block header %}
 <div class="row">
     <div class="col-12 text-center mt-3" id="page-header">
-        <h1>Форма зміни збереження</h1>
+        {% if action == 'add' %}
+        <h1>Зарахування коштів</h1>
+        {% elif action == 'remove' %}
+        <h1>Зняття коштів</h1>
+        {% endif %}
+        <h2>Збереження {{ saving.saving_total.title }} на рахунку {{ saving.account.name }}</h2>
     </div>
 </div>
 {% endblock %}
 
 {% block content %}
-
-<form action="" method="POST">
-    <button>Виконати транфер</button>
-</form>
+<div class="row">
+    <div class="col-6">
+        <h3>На рахунку {{ saving.account.name }} наявно {{ saving.account.get_saving_remainder }} грн вільних коштів</h3>
+    </div>
+    <div class="col-6">
+        <form action="{% url 'saving_transfer' saving.id action %}" method="POST">
+            {% csrf_token %}
+            <input type='number' name='amount' />
+            <button type="submit" class="btn btn-success">Виконати</button>
+        </form>
+    </div>
+</div>
 
 {% endblock %}

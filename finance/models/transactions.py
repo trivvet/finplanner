@@ -99,21 +99,22 @@ class Transaction(TransactionPrototype):
         max_length=256,
         blank=False,
         null=False,
-        verbose_name="Model"
+        verbose_name="Model",
+        default="Nothing"  
     )
 
-    date = models.DateTimeField(
-        default=datetime.now,
-        blank=False,
-        null=False,
-        verbose_name="Transaction Time"
+    model_id = models.CharField(
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Model Id" 
     )
 
     def __unicode__(self):
-        if model == "Account":
-            return u"Транзакція по рахунках від {}".format(self.date.date())
-        elif model == "Saving":
-            return u"Транзакція по збереженнях від {}".format(self.date.date())
+        if self.model == "Account":
+            return u"Транзакція по рахунках"
+        elif self.model == "Saving":
+            return u"Транзакція по збереженнях"
 
     def get_elements(self):
         if model == "Account":

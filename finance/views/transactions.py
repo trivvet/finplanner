@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 from django import forms
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.utils import timezone
 from django.urls import reverse
 
@@ -21,6 +22,11 @@ from finance.models import (
     TransactionToAccount, 
     AccountTransaction
     )
+
+def transactions_list(request):
+    transactions = Transaction.objects.all()
+    return render(request, "finance/transactions.html", 
+        {'transactions': transactions})
 
 def add_transaction(request, mid):
     if request.method == "POST":
